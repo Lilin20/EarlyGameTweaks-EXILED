@@ -16,8 +16,8 @@ namespace EarlyGameTweaks.Items
     public class BerserkerJB : CustomItem
     {
         public override uint Id { get; set; } = 700;
-        public override string Name { get; set; } = "Test JB";
-        public override string Description { get; set; } = "WIP";
+        public override string Name { get; set; } = "Berserker's Rod of Destruction";
+        public override string Description { get; set; } = "Ein Metallrohr aus purem Osmium. Nur speziell trainierte Einheiten können diese Waffe schwingen.";
         public override float Weight { get; set; } = 1.5f;
 
         public override SpawnProperties SpawnProperties { get; set; }
@@ -34,6 +34,12 @@ namespace EarlyGameTweaks.Items
             Exiled.Events.Handlers.Item.ChargingJailbird -= OnJBCharge;
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
             base.UnsubscribeEvents();
+        }
+
+        protected override void OnPickingUp(PickingUpItemEventArgs ev)
+        {
+            ev.IsAllowed = false;
+            ev.Player.ShowHint("Diese Stangenwaffe ist zu schwer um einfach aufgehoben zu werden...");
         }
 
         public void OnJBCharge(ChargingJailbirdEventArgs ev)
