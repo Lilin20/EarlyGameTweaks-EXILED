@@ -21,7 +21,7 @@ namespace EarlyGameTweaks.Roles.NTF
 {
     public class SpecialAgentGuard : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 80;
+        public override uint Id { get; set; } = 303;
         public override int MaxHealth { get; set; } = 100;
         public override string Name { get; set; } = "Facility Guard - Special Agent";
         public override string Description { get; set; } = "Ein ausgebildeter Guard mit einem experimentellen Cloaking-Device.";

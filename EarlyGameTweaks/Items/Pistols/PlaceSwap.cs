@@ -13,7 +13,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GunCOM15)]
     public class PlaceSwap : CustomWeapon
     {
-        public override uint Id { get; set; } = 1233;
+        public override uint Id { get; set; } = 301;
         public override float Damage { get; set; } = 1;
         public override string Name { get; set; } = "Entity Swapper";
         public override string Description { get; set; } = "Tausche die Position mit deinem Ziel.";

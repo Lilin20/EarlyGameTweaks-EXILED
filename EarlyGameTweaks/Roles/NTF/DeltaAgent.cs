@@ -9,7 +9,7 @@ namespace EarlyGameTweaks.Roles.NTF
 {
     public class DeltaAgent : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 48;
+        public override uint Id { get; set; } = 300;
         public override int MaxHealth { get; set; } = 200;
         public override string Name { get; set; } = "NTF - Zeta 9 Unit";
         public override string Description { get; set; } = "Spezialisiert auf Einsätze in Tunneln und instabilen Strukturen. Deine Aufgabe: SCPs sichern, Gefahren neutralisieren – im Dunkeln.";

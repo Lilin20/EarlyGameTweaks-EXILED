@@ -19,7 +19,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GunE11SR)]
     public class Sniper : CustomWeapon
     {
-        public override uint Id { get; set; } = 2118;
+        public override uint Id { get; set; } = 501;
         public override string Name { get; set; } = "RangeTec - .308 Lapua";
         public override string Description { get; set; } = "Schaltet Ziele sauber und schnell aus.";
         public override float Damage { get; set; } = 95;

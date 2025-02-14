@@ -18,7 +18,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GunCrossvec)]
     public class TestDummyPistol : CustomWeapon
     {
-        public override uint Id { get; set; } = 44444;
+        public override uint Id { get; set; } = 9000;
         public override string Name { get; set; } = "test";
         public override string Description { get; set; } = "test";
         public override float Damage { get; set; } = 1;

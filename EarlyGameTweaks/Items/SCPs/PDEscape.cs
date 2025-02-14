@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.SCP1853)]
     public class PDEscape : CustomItem
     {
-        public override uint Id { get; set; } = 1111;
+        public override uint Id { get; set; } = 800;
         public override string Name { get; set; } = "Ass im Ärmel";
         public override string Description { get; set; } = "Du wusstest schon seit längerem das dir dies irgendwann mal sehr viel Glück bringen wird.";
         public override float Weight { get; set; } = 0.5f;

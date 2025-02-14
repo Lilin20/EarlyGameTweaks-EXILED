@@ -11,7 +11,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.ArmorCombat)]
     public class PhantomBarrier : CustomArmor
     {
-        public override uint Id { get; set; } = 668;
+        public override uint Id { get; set; } = 901;
         public override string Name { get; set; } = "Phantom Barrier Suit";
         public override string Description { get; set; } = "Dieser Anzug bietet dir die möglichkeit durch Türen zu gehen.";
         public override float Weight { get; set; } = 1.5f;

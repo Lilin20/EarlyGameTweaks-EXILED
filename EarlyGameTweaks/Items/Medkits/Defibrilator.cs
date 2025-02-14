@@ -16,7 +16,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Medkit)]
     public class Defibrilator : CustomItem
     {
-        public override uint Id { get; set; } = 1355;
+        public override uint Id { get; set; } = 107;
         public override string Name { get; set; } = "Defibrilator";
         public override string Description { get; set; } = "Belebt einen Spieler wieder (macht mit dieser Information was Ihr wollt).";
         public override float Weight { get; set; } = 0.5f;

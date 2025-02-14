@@ -12,7 +12,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Adrenaline)]
     public class LilinsDrug : CustomItem
     {
-        public override uint Id { get; set; } = 999;
+        public override uint Id { get; set; } = 102;
         public override string Name { get; set; } = "SCP-395822 - Dermatodissoziations-Injektor";
         public override string Description { get; set; } = "SCP-395822, der Dermatodissoziations-Injektor, ist ein anomales Injektionsgerät, das bei Verabreichung eine sofortige Abtrennung der Hautschicht bewirkt, gefolgt von Unsichtbarkeit und anderen anomalen Effekten.";
         public override float Weight { get; set; } = 0.5f;

@@ -12,7 +12,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GunRevolver)]
     public class RussianRoulette : CustomWeapon
     {
-        public override uint Id { get; set; } = 1234;
+        public override uint Id { get; set; } = 302;
         public override float Damage { get; set; } = 0.1f;
         public override string Name { get; set; } = "Russisches Roulette";
         public override string Description { get; set; } = "...";

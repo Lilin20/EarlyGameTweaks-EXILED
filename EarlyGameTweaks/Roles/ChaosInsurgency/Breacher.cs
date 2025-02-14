@@ -9,7 +9,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
 {
     public class Breacher : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 49;
+        public override uint Id { get; set; } = 101;
         public override int MaxHealth { get; set; } = 200;
         public override string Name { get; set; } = "Chaos Insurgency - Breacher";
         public override string Description { get; set; } = "Ein Breacher mit der berüchtigten Breach Shotgun namens Kerberos-12";

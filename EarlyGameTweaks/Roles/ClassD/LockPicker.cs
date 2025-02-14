@@ -9,7 +9,7 @@ namespace EarlyGameTweaks.Roles.ClassD
 {
     public class Lockpicker : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 46;
+        public override uint Id { get; set; } = 201;
         public override int MaxHealth { get; set; } = 100;
         public override string Name { get; set; } = "Class-D - Lockpicker";
         public override string Description { get; set; } = "Du bist ein Class-D mit der Fähigkeit Türen zu knacken.";

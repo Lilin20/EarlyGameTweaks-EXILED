@@ -10,7 +10,7 @@ namespace EarlyGameTweaks.Roles.ClassD
 {
     public class Dwarf : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 47;
+        public override uint Id { get; set; } = 200;
         public override int MaxHealth { get; set; } = 50;
         public override string Name { get; set; } = "Class-D - Dwarf";
         public override string Description { get; set; } = "Du bist kleiner - schwerer zu treffen aber dafür weniger HP.";

@@ -136,8 +136,6 @@
     <Compile Include="Items\MPs\MedicGun.cs" />
     <Compile Include="Items\Adrenaline\Fentanyl.cs" />
     <Compile Include="Items\Painkillers\ShadowStep.cs" />
-    <Compile Include="Items\Grenades\ProximityAlert.cs" />
-    <Compile Include="Items\Grenades\ProximityMine.cs" />
     <Compile Include="Items\Grenades\TetherGrenade.cs" />
     <Compile Include="Items\Grenades\ClusterGrenade.cs" />
     <Compile Include="Items\Medkits\CustomMedkit.cs" />
@@ -176,7 +174,6 @@
     <Compile Include="Roles\NTF\DeltaAgent.cs" />
     <Compile Include="Roles\NTF\SpecialAgentGuard.cs" />
     <Compile Include="Roles\Scientist\Pacifist.cs" />
-    <Compile Include="Roles\SCP\ZombieJuggernautCopy.cs" />
     <Compile Include="Roles\SCP\ZombieJuggernaut.cs" />
     <Compile Include="RoomManager.cs" />
     <Compile Include="Settings.cs" />

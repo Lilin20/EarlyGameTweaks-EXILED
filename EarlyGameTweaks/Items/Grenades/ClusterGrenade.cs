@@ -14,7 +14,7 @@ namespace EarlyGameTweaks.Items
     {
         public override bool ExplodeOnCollision { get; set; } = false;
         public override float FuseTime { get; set; } = 8f;
-        public override uint Id { get; set; } = 1115;
+        public override uint Id { get; set; } = 200;
         public override string Name { get; set; } = "Cluster Granate";
         public override string Description { get; set; } = "Eine erweiterte Granate die nach der initialen Explosion weitere Granaten losfeuert.";
         public override float Weight { get; set; } = 1.75f;

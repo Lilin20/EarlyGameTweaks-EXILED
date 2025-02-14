@@ -17,7 +17,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GunE11SR)]
     public class HumeBreaker : CustomWeapon
     {
-        public override uint Id { get; set; } = 1113;
+        public override uint Id { get; set; } = 500;
         public override string Name { get; set; } = "Hume Breaker v2.1";
         public override string Description { get; set; } = "Eine experimentelle Waffe die annormale Schilde mit sofortiger Wirkung zerstört. Anwendung kann tödlich enden.";
         public override float Damage { get; set; } = 1;

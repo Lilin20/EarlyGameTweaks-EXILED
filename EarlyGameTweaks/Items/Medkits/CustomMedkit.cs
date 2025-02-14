@@ -19,7 +19,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Medkit)]
     public class CustomMedkit : CustomItem
     {
-        public override uint Id { get; set; } = 30;
+        public override uint Id { get; set; } = 106;
         public override string Name { get; set; } = "Medkit Mk. 2";
         public override string Description { get; set; } = "Dieses Medkit sendet Nanobots aus. Heilt alle Spieler in einem 5 Meter Radius.";
         public override float Weight { get; set; } = 0.5f;

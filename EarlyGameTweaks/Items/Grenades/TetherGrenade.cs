@@ -17,7 +17,7 @@ namespace EarlyGameTweaks.Items
     {
         public override bool ExplodeOnCollision { get; set; } = true;
         public override float FuseTime { get; set; } = 900f;
-        public override uint Id { get; set; } = 1116;
+        public override uint Id { get; set; } = 202;
         public override string Name { get; set; } = "Tether Granate";
         public override string Description { get; set; } = "Explodiert beim aufprall. Hält Gegner im Wirkungsbereich fest.";
         public override float Weight { get; set; } = 1.75f;

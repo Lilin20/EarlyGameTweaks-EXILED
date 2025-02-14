@@ -10,7 +10,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
 {
     public class Berserker : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 75;
+        public override uint Id { get; set; } = 100;
         public override int MaxHealth { get; set; } = 200;
         public override string Name { get; set; } = "Chaos Insurgency - Berserker";
         public override string Description { get; set; } = "Experte des Nahkampfes mit tendenz zu aggressiven Verhalten.";

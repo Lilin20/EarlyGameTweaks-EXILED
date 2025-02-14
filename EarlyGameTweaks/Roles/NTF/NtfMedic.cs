@@ -8,7 +8,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
 {
     public class NtfMedic : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 61;
+        public override uint Id { get; set; } = 301;
         public override int MaxHealth { get; set; } = 100;
         public override string Name { get; set; } = "NTF - Trauma Team";
         public override string Description { get; set; } = "Speziell ausgerüstet für den medizinischen Support.";

@@ -16,7 +16,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Medkit)]
     public class DefiChaos : CustomItem
     {
-        public override uint Id { get; set; } = 13552;
+        public override uint Id { get; set; } = 108;
         public override string Name { get; set; } = "Vitalisator";
         public override string Description { get; set; } = "Ein speziell für Chaos-Insurgency angefertigter Defibrilator.";
         public override float Weight { get; set; } = 1f;

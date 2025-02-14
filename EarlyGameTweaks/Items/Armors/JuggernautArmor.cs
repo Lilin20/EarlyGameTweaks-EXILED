@@ -11,7 +11,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.ArmorHeavy)]
     public class JuggernautArmor : CustomArmor
     {
-        public override uint Id { get; set; } = 667;
+        public override uint Id { get; set; } = 900;
         public override string Name { get; set; } = "SCP-645643";
         public override string Description { get; set; } = "Eine Panzerung aus biologischen Bestandteilen. Kann nicht mehr abgelegt werden und frisst andere Panzerungen beim versuch diese anzuziehen.";
         public override float Weight { get; set; } = 1.5f;

@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Painkillers)]
     public class DeathCheat : CustomItem
     {
-        public override uint Id { get; set; } = 20;
+        public override uint Id { get; set; } = 104;
         public override string Name { get; set; } = "Death Cheat";
         public override string Description { get; set; } = "Belebt dich nach einem zufälligen Interval wieder nachdem du gestorben bist. Keine Garantie.";
         public override float Weight { get; set; } = 0.5f;

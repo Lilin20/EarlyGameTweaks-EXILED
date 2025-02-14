@@ -18,7 +18,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GunCrossvec)]
     public class MedicGun : CustomWeapon
     {
-        public override uint Id { get; set; } = 2114;
+        public override uint Id { get; set; } = 400;
         public override float Damage { get; set; } = 0;
         public override string Name { get; set; } = "MS9K - MedShot 9000";
         public override string Description { get; set; } = "Ein Werkzeug welches Menschen heilt.";

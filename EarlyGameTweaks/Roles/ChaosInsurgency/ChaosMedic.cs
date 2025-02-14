@@ -8,7 +8,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
 {
     public class ChaosMedic : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 60;
+        public override uint Id { get; set; } = 102;
         public override int MaxHealth { get; set; } = 100;
         public override string Name { get; set; } = "Chaos Insurgency - Trauma Team";
         public override string Description { get; set; } = "Speziell ausgerüstet für den medizinischen Support.";

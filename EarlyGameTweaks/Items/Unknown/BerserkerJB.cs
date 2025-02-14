@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Jailbird)]
     public class BerserkerJB : CustomItem
     {
-        public override uint Id { get; set; } = 2117;
+        public override uint Id { get; set; } = 700;
         public override string Name { get; set; } = "Test JB";
         public override string Description { get; set; } = "WIP";
         public override float Weight { get; set; } = 1.5f;

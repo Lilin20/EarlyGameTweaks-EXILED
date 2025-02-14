@@ -19,7 +19,7 @@ namespace EarlyGameTweaks.Items.Grenades
     {
         public override bool ExplodeOnCollision { get; set; } = false;
         public override float FuseTime { get; set; } = 3f;
-        public override uint Id { get; set; } = 2119;
+        public override uint Id { get; set; } = 201;
         public override string Name { get; set; } = "Rauchgranate";
         public override string Description { get; set; } = "Vernebelt die Umgebung.";
         public override float Weight { get; set; } = 1.15f;

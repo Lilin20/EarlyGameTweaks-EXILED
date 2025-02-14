@@ -13,7 +13,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Adrenaline)]
     public class CustomJailbird : CustomItem
     {
-        public override uint Id { get; set; } = 666;
+        public override uint Id { get; set; } = 103;
         public override string Name { get; set; } = "LMD - Neurolink Stimulator";
         public override string Description { get; set; } = "Stimuliert ein Gerät in einem Hirn. Der Stimulator sendet ein Signal zu einem bestimmten Neurolink aus. Aber für welches?";
         public override float Weight { get; set; } = 0.5f;

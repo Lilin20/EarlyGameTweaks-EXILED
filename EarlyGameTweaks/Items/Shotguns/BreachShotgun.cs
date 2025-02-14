@@ -12,7 +12,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GunShotgun)]
     public class BreachShotgun : CustomWeapon
     {
-        public override uint Id { get; set; } = 1114;
+        public override uint Id { get; set; } = 600;
         public override string Name { get; set; } = "Kerberos-12";
         public override string Description { get; set; } = "Ermöglicht es dir Türen zu zerstören. Teilt keinen Schaden an Spieler aus.";
         public override float Damage { get; set; } = 0;

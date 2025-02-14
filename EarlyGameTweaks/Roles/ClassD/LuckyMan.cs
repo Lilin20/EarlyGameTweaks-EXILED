@@ -13,7 +13,7 @@ namespace EarlyGameTweaks.Roles.ClassD
 {
     public class LuckyMan : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 70;
+        public override uint Id { get; set; } = 202;
         public override int MaxHealth { get; set; } = 100;
         public override string Name { get; set; } = "SCP-181 - Lucky Man";
         public override string Description { get; set; } = "Du öffnest für die ersten 3 Minuten alle Türen ohne Karte und du kannst Kugeln/Schläge ausweichen.";

@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Adrenaline)]
     public class ShadowStep : CustomItem
     {
-        public override uint Id { get; set; } = 2115;
+        public override uint Id { get; set; } = 105;
         public override string Name { get; set; } = "Shadow Step";
         public override string Description { get; set; } = "Gibt dir die Möglichkeit die Umgebung zu erkunden ohne erkannt zu werden.";
         public override float Weight { get; set; } = 0.5f;

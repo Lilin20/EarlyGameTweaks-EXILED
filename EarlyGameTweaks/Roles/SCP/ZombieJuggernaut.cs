@@ -14,7 +14,7 @@ namespace EarlyGameTweaks.Roles.SCP
 {
     public class ZombieJuggernaut : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 85;
+        public override uint Id { get; set; } = 500;
         public override int MaxHealth { get; set; } = 1000;
         public override string Name { get; set; } = "SCP-049-2 - Juggernaut";
         public override string Description { get; set; } = "Eine etwas mehr gepanzerte Art eines Zombies.";

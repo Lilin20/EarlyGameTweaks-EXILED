@@ -14,7 +14,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Adrenaline)]
     public class LethalInjection : CustomItem
     {
-        public override uint Id { get; set; } = 556;
+        public override uint Id { get; set; } = 101;
         public override string Name { get; set; } = "Gesichtsfressende Chemikalie";
         public override string Description { get; set; } = "Wird direkt in den Kopf injeziert. Entstellt das Gesicht des Anwenders und bringt SCP-096 in einen ruhigen Zustand. Der Anwender stirbt.";
         public override float Weight { get; set; } = 0.5f;

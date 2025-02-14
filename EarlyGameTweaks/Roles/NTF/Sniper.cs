@@ -11,7 +11,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
 {
     public class Sniper : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 65;
+        public override uint Id { get; set; } = 302;
         public override int MaxHealth { get; set; } = 100;
         public override string Name { get; set; } = "NTF - Scharfschütze";
         public override string Description { get; set; } = "Speziell ausgerüstet für den Fernkampf.";

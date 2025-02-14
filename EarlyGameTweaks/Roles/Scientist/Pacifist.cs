@@ -9,7 +9,7 @@ namespace EarlyGameTweaks.Roles.Scientist
 {
     public class Pacifist : CustomRole, ICustomRole
     {
-        public override uint Id { get; set; } = 50;
+        public override uint Id { get; set; } = 400;
         public override int MaxHealth { get; set; } = 150;
         public override string Name { get; set; } = "Scientist - Pazifist";
         public override string Description { get; set; } = "Ein simpler Wissenschaftler. Du kannst keine Waffen aufheben.";

@@ -16,7 +16,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Medkit)]
     public class DefiNtf : CustomItem
     {
-        public override uint Id { get; set; } = 13553;
+        public override uint Id { get; set; } = 109;
         public override string Name { get; set; } = "Trauma Paket";
         public override string Description { get; set; } = "Ein speziell für NTF angefertigter Defibrilator.";
         public override float Weight { get; set; } = 1f;

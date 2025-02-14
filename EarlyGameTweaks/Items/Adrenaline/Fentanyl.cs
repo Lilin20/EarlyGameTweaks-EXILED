@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.Adrenaline)]
     public class Fentanyl : CustomItem
     {
-        public override uint Id { get; set; } = 2116;
+        public override uint Id { get; set; } = 100;
         public override string Name { get; set; } = "Fentanyl";
         public override string Description { get; set; } = "Absturz";
         public override float Weight { get; set; } = 0.5f;

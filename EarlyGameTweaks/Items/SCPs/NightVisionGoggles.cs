@@ -13,7 +13,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.SCP268)]
     public class NightVisionGoggles : GogglesItem
     {
-        public override uint Id { get; set; } = 1112;
+        public override uint Id { get; set; } = 801;
         public override string Name { get; set; } = "Night Hawk Mk. 2";
         public override string Description { get; set; } = "Ermöglicht es dir bei völliger dunkelheit zu sehen.";
         public override float Weight { get; set; } = 0.5f;

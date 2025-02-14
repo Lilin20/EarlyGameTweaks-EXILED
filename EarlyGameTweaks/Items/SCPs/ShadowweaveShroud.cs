@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.SCP268)]
     public class ShadowweaveShroud : CustomItem
     {
-        public override uint Id { get; set; } = 777;
+        public override uint Id { get; set; } = 802;
         public override string Name { get; set; } = "Shadowweave Shroud";
         public override string Description { get; set; } = "Tarnt dich. Bezieht seine Energie aus nahen Quellen. Du bist für max. 1 Minute unsichtbar.";
         public override float Weight { get; set; } = 0.1f;
