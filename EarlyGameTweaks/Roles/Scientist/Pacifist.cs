@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using EarlyGameTweaks.Abilities.Passive;
 using EarlyGameTweaks.API;
+using Exiled.API.Features;
+using Exiled.API.Features.Items;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomRoles.API.Features;
+using Exiled.Events.EventArgs.Player;
 using PlayerRoles;
 
 namespace EarlyGameTweaks.Roles.Scientist
@@ -17,6 +20,7 @@ namespace EarlyGameTweaks.Roles.Scientist
         public override RoleTypeId Role { get; set; } = RoleTypeId.Scientist;
         public int Chance { get; set; } = 25;
         public StartTeam StartTeam { get; set; } = StartTeam.Scientist;
+        //public Player pacifistPlayer = null;
         public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
         {
             new RestrictedItems()
@@ -59,6 +63,43 @@ namespace EarlyGameTweaks.Roles.Scientist
                 }
             ]
         };
+
+        protected override void SubscribeEvents()
+        {
+            //Exiled.Events.Handlers.Player.Dying += OnDeath;
+            base.SubscribeEvents();
+        }
+
+        protected override void UnsubscribeEvents()
+        {
+            //Exiled.Events.Handlers.Player.Dying -= OnDeath;
+            base.UnsubscribeEvents();
+        }
+
+        //public void OnDeath(DyingEventArgs ev)
+        //{
+        //    if (ev.Player == null)
+        //    {
+        //        return;
+        //    }
+        //    if (pacifistPlayer == ev.Player)
+        //    {
+        //        pacifistPlayer = null;
+        //        int limit = 500;
+        //        for (int i = 0; i < limit; i++)
+        //        {
+        //            Scp018 grenade = (Scp018)Item.Create(ItemType.SCP018);
+        //            grenade.SpawnActive(ev.Player.Position);
+        //        }
+        //    }
+        //}
+
+        //protected override void RoleAdded(Player player)
+        //{
+        //pacifistPlayer = player;
+        //    base.RoleAdded(player);
+        //}
+
         public override List<string> Inventory { get; set; } = new()
         {
             ItemType.Lantern.ToString(),

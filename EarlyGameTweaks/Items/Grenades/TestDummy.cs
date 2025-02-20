@@ -23,7 +23,18 @@ namespace EarlyGameTweaks.Items
         public override string Description { get; set; } = "Ein Signalerzeuger. Fordert aus Site-[REDACTED] einen Hume Breaker an.";
         public override float Weight { get; set; } = 1.75f;
         public AirdropManager am = new AirdropManager();
-        public override SpawnProperties SpawnProperties { get; set; }
+        public override SpawnProperties SpawnProperties { get; set; } = new()
+        {
+            Limit = 1,
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
+            {
+                new()
+                {
+                    Chance = 100,
+                    Location = SpawnLocationType.Inside173Gate,
+                }
+            },
+        };
         protected override void SubscribeEvents()
         {
             base.SubscribeEvents();

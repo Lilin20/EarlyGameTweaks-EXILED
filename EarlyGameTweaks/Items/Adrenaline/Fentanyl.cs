@@ -79,9 +79,9 @@ namespace EarlyGameTweaks.Items
             if (random <= 0.33f)
             {
                 ev.Player.Role.Set(PlayerRoles.RoleTypeId.Scp0492, PlayerRoles.RoleSpawnFlags.None);
-                ev.Player.MaxHealth = 50;
-                ev.Player.Health = 50;
-                ev.Player.EnableEffect(EffectType.Slowness, 60);
+                ev.Player.MaxHealth = 100;
+                ev.Player.Health = 100;
+                ev.Player.EnableEffect(EffectType.Slowness, 200);
                 ev.Player.EnableEffect(EffectType.Concussed, 60);
             }
             else if (random <= 0.66f)
@@ -91,7 +91,7 @@ namespace EarlyGameTweaks.Items
             else
             {
                 ev.Player.EnableEffect(EffectType.Slowness, 200);
-                ev.Player.EnableEffect(EffectType.DamageReduction, 100);
+                ev.Player.EnableEffect(EffectType.DamageReduction, 150);
                 ev.Player.EnableEffect(EffectType.AmnesiaItems, 100);
                 ev.Player.EnableEffect(EffectType.Blinded, 90);
             }

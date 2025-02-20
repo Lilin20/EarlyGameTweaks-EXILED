@@ -27,7 +27,7 @@ namespace EarlyGameTweaks.Roles.NTF
         public override string Description { get; set; } = "Ein ausgebildeter Guard mit einem experimentellen Cloaking-Device.";
         public override string CustomInfo { get; set; } = "Facility Guard - Special Agent";
         public override RoleTypeId Role { get; set; } = RoleTypeId.FacilityGuard;
-        public int Chance { get; set; } = 10;
+        public int Chance { get; set; } = 25;
         public CoroutineHandle _coroutineHandle;
         public override bool DisplayCustomItemMessages { get; set; } = false;
         public StartTeam StartTeam { get; set; } = StartTeam.Guard;

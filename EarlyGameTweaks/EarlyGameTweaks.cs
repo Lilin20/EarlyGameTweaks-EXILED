@@ -33,7 +33,7 @@ namespace EarlyGameTweaks
         public Berserker berserkerc = new Berserker();
         public SpecialAgentGuard sagc = new SpecialAgentGuard();
         public ZombieJuggernaut zjc = new ZombieJuggernaut();
-        public ZombieJuggernautCopy zjcc = new ZombieJuggernautCopy();
+        public MedicZombie zmc = new MedicZombie();
 
         public List<ExplosionGrenadeProjectile> GrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
         public List<ExplosionGrenadeProjectile> AlertGrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
@@ -59,7 +59,6 @@ namespace EarlyGameTweaks
             CustomRoleEventHandler = new CustomRoleEventHandler(this);
             AudioClipStorage.LoadClip("C:\\Users\\lilin\\AppData\\Roaming\\EXILED\\Audio\\test.ogg", "test");
             AudioClipStorage.LoadClip("C:\\Users\\lilin\\AppData\\Roaming\\EXILED\\Audio\\alarm.ogg", "alarmSound");
-            AudioClipStorage.LoadClip("C:\\Users\\lilin\\AppData\\Roaming\\EXILED\\Audio\\berserker.ogg", "berserker");
             AudioClipStorage.LoadClip("C:\\Users\\lilin\\AppData\\Roaming\\EXILED\\Audio\\berserker2.ogg", "berserker2");
 
             tc.Register();
@@ -74,7 +73,7 @@ namespace EarlyGameTweaks
             berserkerc.Register();
             sagc.Register();
             zjc.Register();
-            zjcc.Register();
+            zmc.Register();
 
             foreach (CustomRole role in CustomRole.Registered)
             {
@@ -139,7 +138,7 @@ namespace EarlyGameTweaks
             berserkerc.Unregister();
             sagc.Unregister();
             zjc.Unregister();
-            zjcc.Unregister();
+            zmc.Unregister();
 
             CustomAbility.UnregisterAbilities();
 

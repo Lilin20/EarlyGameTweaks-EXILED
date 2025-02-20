@@ -17,7 +17,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
         public override string Description { get; set; } = "Speziell ausgerüstet für den Fernkampf.";
         public override string CustomInfo { get; set; } = "NTF - Scharfschütze";
         public override RoleTypeId Role { get; set; } = RoleTypeId.NtfCaptain;
-        public int Chance { get; set; } = 10;
+        public int Chance { get; set; } = 25;
         public override bool DisplayCustomItemMessages { get; set; } = false;
         public StartTeam StartTeam { get; set; } = StartTeam.Ntf;
         public override SpawnProperties SpawnProperties { get; set; } = new()

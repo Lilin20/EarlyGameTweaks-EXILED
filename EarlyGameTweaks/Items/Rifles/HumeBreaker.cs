@@ -27,23 +27,8 @@ namespace EarlyGameTweaks.Items
         public Transform handBone;
         private Queue<Primitive> spawnedPrimitives = new Queue<Primitive>();
 
-        public override SpawnProperties SpawnProperties { get; set; } = new()
-        {
-            Limit = 2,
-            DynamicSpawnPoints = new List<DynamicSpawnPoint>
-            {
-                new()
-                {
-                    Chance = 100,
-                    Location = SpawnLocationType.Inside079Secondary,
-                },
-                new()
-                {
-                    Chance = 20,
-                    Location = SpawnLocationType.InsideIntercom
-                }
-            },
-        };
+        public override SpawnProperties SpawnProperties { get; set; }
+
         public override AttachmentName[] Attachments { get; set; } = new[]
         {
             AttachmentName.ScopeSight,
@@ -81,7 +66,11 @@ namespace EarlyGameTweaks.Items
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
-            if (ev.Target == null) return;
+            if (ev.Target == null)
+            {
+                ev.Firearm.Destroy();
+                return;
+            }
 
             ev.CanHurt = false;
 
@@ -94,11 +83,13 @@ namespace EarlyGameTweaks.Items
                 grenade.SpawnActive(ev.Position, owner: ev.Player);
 
                 ev.Target.HumeShield = 0;
+                ev.Target.MaxHumeShield = 0;
             }
             else
             {
                 ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE);
                 grenade.FuseTime = 0.05f;
+                grenade.MaxRadius = 5f;
                 grenade.ScpDamageMultiplier = 0f;
                 grenade.ChangeItemOwner(Server.Host, ev.Player);
                 grenade.SpawnActive(ev.Position, owner: ev.Player);
@@ -132,6 +123,8 @@ namespace EarlyGameTweaks.Items
             ev.Player.EnableEffect(EffectType.Flashed, 0.5f);
             ev.Player.EnableEffect(EffectType.Slowness, 40, 5f);
             //ev.Player.EnableEffect(EffectType.Deafened, 5f);
+
+            ev.Firearm.Destroy();
 
             if (!Physics.Raycast(ev.Player.CameraTransform.position, ev.Player.CameraTransform.forward, out RaycastHit raycastHit,
                    100, ~(1 << 1 | 1 << 13 | 1 << 16 | 1 << 28)))

@@ -16,7 +16,7 @@ namespace EarlyGameTweaks.Items
     public class HackGun : CustomWeapon
     {
         public override uint Id { get; set; } = 300;
-        public override string Name { get; set; } = "Lilin's Toolgun";
+        public override string Name { get; set; } = "Nullifier";
         public override string Description { get; set; } = "Eine Toolgun welches offene Türen sperrt und geschlossene Türen öffnet. Kann 3 mal benutzt werden.";
         public override float Damage { get; set; } = 1;
         public override byte ClipSize { get; set; } = 3;

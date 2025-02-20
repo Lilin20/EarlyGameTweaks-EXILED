@@ -76,7 +76,7 @@ namespace EarlyGameTweaks.Items
         private void OnPlayerDeath(DyingEventArgs ev)
         {
             float random = UnityEngine.Random.value;
-            if (random <= 0.45f)
+            if (random <= 0.5f)
             {
                 if (oldPlayer != null)
                 {
@@ -86,11 +86,14 @@ namespace EarlyGameTweaks.Items
                     System.Random randomTime = new System.Random();
                     float randomValue = randomTime.Next(30, 121);
 
+                    oldPlayer.ShowHint("Etwas greift nach deiner Seele...");
+
                     Timing.CallDelayed(randomValue, () =>
                     {
                         if (oldPlayer.Role is Exiled.API.Features.Roles.SpectatorRole)
                         {
                             oldPlayer.Role.Set(oldRole, RoleSpawnFlags.None);
+                            oldPlayer.ShowHint("Wake the fuck up Samurai - We got SCPs to kill...");
                         }
                     });
                 }

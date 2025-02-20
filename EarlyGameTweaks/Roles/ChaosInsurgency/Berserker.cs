@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EarlyGameTweaks.Abilities.Active;
+using EarlyGameTweaks.Abilities.Passive;
 using EarlyGameTweaks.API;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomRoles.API.Features;
@@ -38,6 +39,33 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
             {
                 Name = "Berserker's Fury [Active]",
                 Description = "Test",
+            },
+            new RestrictedItems()
+            {
+                Name = "Restricted Items [Passive]",
+                Description = "Handles restricted items",
+                RestrictedItemList =
+                {
+                    ItemType.GunA7,
+                    ItemType.GunAK,
+                    ItemType.GunCOM15,
+                    ItemType.GunCOM18,
+                    ItemType.GunCom45,
+                    ItemType.GunCrossvec,
+                    ItemType.GunE11SR,
+                    ItemType.GunFRMG0,
+                    ItemType.GunFSP9,
+                    ItemType.GunLogicer,
+                    ItemType.GunRevolver,
+                    ItemType.GunRevolver,
+                    ItemType.GrenadeFlash,
+                    ItemType.GrenadeHE,
+                    ItemType.MicroHID,
+                    ItemType.ParticleDisruptor,
+                },
+                RestrictUsingItems = false,
+                RestrictPickingUpItems = true,
+                RestrictDroppingItems = false,
             }
         };
         public override List<string> Inventory { get; set; } = new()
@@ -46,7 +74,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
             ItemType.Medkit.ToString(),
             ItemType.ArmorHeavy.ToString(),
             ItemType.GrenadeFlash.ToString(),
-            "Test JB",
+            "Berserker's Rod of Destruction",
         };
     }
 }

@@ -19,7 +19,7 @@ namespace EarlyGameTweaks.Roles.ClassD
         public override string Description { get; set; } = "Du öffnest für die ersten 3 Minuten alle Türen ohne Karte und du kannst Kugeln/Schläge ausweichen.";
         public override string CustomInfo { get; set; } = "SCP-181 - Lucky Man";
         public override RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
-        public int Chance { get; set; } = 10;
+        public int Chance { get; set; } = 15;
         public StartTeam StartTeam { get; set; } = StartTeam.ClassD;
         public override List<CustomAbility> CustomAbilities { get; set; }
         public List<EffectType> GoodEffects { get; set; } = new List<EffectType> { EffectType.MovementBoost, EffectType.Vitality, EffectType.Invigorated };

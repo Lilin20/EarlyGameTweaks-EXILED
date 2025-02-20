@@ -61,9 +61,6 @@
     <Reference Include="AudioPlayerApi">
       <HintPath>..\..\Games\AudioPlayerApi.dll</HintPath>
     </Reference>
-    <Reference Include="HintServiceMeow-Exiled">
-      <HintPath>..\..\..\Downloads\HintServiceMeow-Exiled.dll</HintPath>
-    </Reference>
     <Reference Include="MapEditorReborn %281%29">
       <HintPath>..\..\..\Downloads\MapEditorReborn (1).dll</HintPath>
     </Reference>
@@ -118,6 +115,7 @@
     <Compile Include="Abilities\Active\BerserkerFury.cs" />
     <Compile Include="Abilities\Active\ChargeAbility.cs" />
     <Compile Include="Abilities\Active\DoorPicking.cs" />
+    <Compile Include="Abilities\Active\HealingMist.cs" />
     <Compile Include="Abilities\Active\ZoneBlackout.cs" />
     <Compile Include="Abilities\Passive\EffectEnabler.cs" />
     <Compile Include="AirdropManager.cs" />
@@ -161,6 +159,7 @@
     <Compile Include="Items\SCPs\ShadowweaveShroud.cs" />
     <Compile Include="Items\Adrenaline\PhillipExplode.cs" />
     <Compile Include="Items\Unknown\BerserkerJB.cs" />
+    <Compile Include="Items\Unknown\KeycardHB.cs" />
     <Compile Include="PlayerExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Roles\ChaosInsurgency\Berserker.cs" />
@@ -174,6 +173,7 @@
     <Compile Include="Roles\NTF\DeltaAgent.cs" />
     <Compile Include="Roles\NTF\SpecialAgentGuard.cs" />
     <Compile Include="Roles\Scientist\Pacifist.cs" />
+    <Compile Include="Roles\SCP\MedicZombie.cs" />
     <Compile Include="Roles\SCP\ZombieJuggernaut.cs" />
     <Compile Include="RoomManager.cs" />
     <Compile Include="Settings.cs" />

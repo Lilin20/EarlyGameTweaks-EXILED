@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Roles.ClassD
         public override string Description { get; set; } = "Du bist ein Class-D mit der Fähigkeit Türen zu knacken.";
         public override string CustomInfo { get; set; } = "Class-D - Lockpicker";
         public override RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
-        public int Chance { get; set; } = 10;
+        public int Chance { get; set; } = 20;
         public StartTeam StartTeam { get; set; } = StartTeam.ClassD;
         public override List<CustomAbility> CustomAbilities { get; set; } = new()
         {

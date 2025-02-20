@@ -32,12 +32,7 @@ namespace EarlyGameTweaks.Items
                 new()
                 {
                     Chance = 25,
-                    Location = SpawnLocationType.Inside173Gate,
-                },
-                new()
-                {
-                    Chance = 25,
-                    Location = SpawnLocationType.InsideLczWc,
+                    Location = SpawnLocationType.Inside173Armory,
                 }
             },
         };
@@ -66,15 +61,12 @@ namespace EarlyGameTweaks.Items
             shroudTime = 0;
             roomTime = 0;
 
-            Log.Info("You used Shroud.");
-
             ev.Player.ReferenceHub.playerEffectsController.DisableEffect<Invisible>();
 
             Timing.CallDelayed(0.5f, () =>
             {
                 ev.Player.EnableEffect(EffectType.Invisible, 45f, true);
-                ev.Player.EnableEffect(EffectType.Concussed, 45f, true);
-                ev.Player.EnableEffect(EffectType.Slowness, 40, 45f, false);
+                ev.Player.EnableEffect(EffectType.Slowness, 15, 45f, false);
             });
 
             Timing.CallDelayed(1f, () =>

@@ -16,7 +16,7 @@ namespace EarlyGameTweaks.Roles.ClassD
         public override string Description { get; set; } = "Du bist kleiner - schwerer zu treffen aber dafür weniger HP.";
         public override string CustomInfo { get; set; } = "Class-D - Dwarf";
         public override RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
-        public int Chance { get; set; } = 10;
+        public int Chance { get; set; } = 15;
         public StartTeam StartTeam { get; set; } = StartTeam.ClassD;
         public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
         {

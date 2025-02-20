@@ -20,7 +20,7 @@ namespace EarlyGameTweaks.Roles.SCP
         public override string Description { get; set; } = "Eine etwas mehr gepanzerte Art eines Zombies.";
         public override string CustomInfo { get; set; } = "SCP-049-2 - Juggernaut";
         public override RoleTypeId Role { get; set; } = RoleTypeId.Scp0492;
-        public int Chance { get; set; } = 50;
+        public int Chance { get; set; } = 15;
         public StartTeam StartTeam { get; set; } = StartTeam.Scp | StartTeam.Revived;
         public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
         {
@@ -36,7 +36,7 @@ namespace EarlyGameTweaks.Roles.SCP
                 Description = "Slow ahh type of guy",
                 EffectsToApply =
                 {
-                    {EffectType.Slowness, 13}
+                    {EffectType.Slowness, 25}
                 }
             }
         };
@@ -65,6 +65,7 @@ namespace EarlyGameTweaks.Roles.SCP
 
                 ev.Player.MaxHealth = 2000;
                 ev.Player.Health = 2000;
+                ev.Player.EnableEffect(EffectType.Slowness, 25);
             });
             
         }

@@ -63,13 +63,22 @@ namespace EarlyGameTweaks.Abilities.Active
 
             Timing.CallDelayed(randomTime, () =>
             {
-                Log.Debug($"VVUP Custom Abilities: Opening {ev.Door.Name}");
-                ev.Door.IsOpen = true;
-                PlayersWithPickingDoorAbility.Remove(ev.Player);
-                Timing.CallDelayed(TimeForDoorToBeOpen, () =>
+                if (ev.Door.Type == DoorType.Scp173Gate)
                 {
-                    ev.Door.IsOpen = false;
-                });
+                    ev.Player.ShowHint("Diese Tür ist physisch nicht zu öffnen.");
+                    PlayersWithPickingDoorAbility.Remove(ev.Player);
+                    return;
+                }
+                else
+                {
+                    Log.Debug($"VVUP Custom Abilities: Opening {ev.Door.Name}");
+                    ev.Door.IsOpen = true;
+                    PlayersWithPickingDoorAbility.Remove(ev.Player);
+                    Timing.CallDelayed(TimeForDoorToBeOpen, () =>
+                    {
+                        ev.Door.IsOpen = false;
+                    });
+                }
             });
         }
     }

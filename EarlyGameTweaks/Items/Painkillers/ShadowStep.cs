@@ -26,21 +26,21 @@ namespace EarlyGameTweaks.Items
             {
                 new()
                 {
-                    Chance = 25,
+                    Chance = 35,
                     Zone = ZoneType.LightContainment,
                     UseChamber = false,
                     Type = LockerType.Misc,
                 },
                 new()
                 {
-                    Chance = 25,
+                    Chance = 35,
                     Zone = ZoneType.HeavyContainment,
                     UseChamber = false,
                     Type = LockerType.Misc,
                 },
                 new()
                 {
-                    Chance = 25,
+                    Chance = 35,
                     Zone = ZoneType.Entrance,
                     UseChamber = false,
                     Type = LockerType.Misc,

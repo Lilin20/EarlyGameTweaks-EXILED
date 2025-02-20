@@ -79,7 +79,7 @@ namespace EarlyGameTweaks.Items
             }
 
             float random = UnityEngine.Random.value;
-            if (random <= 0.65f)
+            if (random <= 0.55f)
             {
                 ev.Player.EnableEffect(EffectType.CardiacArrest, 1, 100f, false);
                 ev.Player.EnableEffect(EffectType.AmnesiaItems, 1, 100f, false);

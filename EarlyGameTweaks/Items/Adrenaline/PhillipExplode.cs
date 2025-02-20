@@ -25,7 +25,7 @@ namespace EarlyGameTweaks.Items
             {
                 new()
                 {
-                    Chance = 11,
+                    Chance = 10,
                     Zone = ZoneType.LightContainment,
                     UseChamber = false,
                     Type = LockerType.Misc,
@@ -58,12 +58,12 @@ namespace EarlyGameTweaks.Items
                 Log.Info(player.UserId);
                 if (player.UserId == "76561199065461828@steam")
                 {
-                    int limit = 50;
+                    int limit = 25;
                     for (int i = 0; i < limit; i++)
                     {
                         ExplosiveGrenade grenade = (ExplosiveGrenade)Item.Create(ItemType.GrenadeHE);
-                        grenade.FuseTime = 2f;
-                        grenade.MaxRadius = 0.5f;
+                        grenade.FuseTime = 1f;
+                        grenade.MaxRadius = 1f;
                         grenade.SpawnActive(player.Position);
                         grenade.ConcussDuration = 5f;
                         grenade.BurnDuration = 5f;

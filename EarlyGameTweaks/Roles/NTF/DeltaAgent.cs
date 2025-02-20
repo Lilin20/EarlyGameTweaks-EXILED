@@ -16,7 +16,7 @@ namespace EarlyGameTweaks.Roles.NTF
         public override string CustomInfo { get; set; } = "NTF - Zeta 9 Unit";
         public override RoleTypeId Role { get; set; } = RoleTypeId.NtfCaptain;
         public override bool DisplayCustomItemMessages { get; set; } = false;
-        public int Chance { get; set; } = 30;
+        public int Chance { get; set; } = 15;
         public StartTeam StartTeam { get; set; } = StartTeam.Ntf;
         public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
         {

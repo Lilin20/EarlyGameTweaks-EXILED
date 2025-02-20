@@ -3,27 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using EarlyGameTweaks.Abilities.Active;
 using Exiled.API.Enums;
-using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
 using Exiled.CustomItems.API.Features;
-using Exiled.CustomRoles.API;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp096;
-using MEC;
 using PlayerRoles.PlayableScps.Scp079.Cameras;
-using PluginAPI.Events;
 using UnityEngine;
 using UserSettings.ServerSpecific;
-using HintServiceMeow;
-using HintServiceMeow.Core.Utilities;
-using HintServiceMeow.UI.Utilities;
-using Exiled.API.Features.Roles;
 using PlayerRoles;
-using EarlyGameTweaks.API;
-using Exiled.Events.EventArgs.Server;
-using CustomPlayerEffects;
+using Exiled.API.Features.Doors;
+using Exiled.Permissions;
+using Interactables.Interobjects.DoorUtils;
 
 namespace EarlyGameTweaks
 {
@@ -80,6 +72,13 @@ namespace EarlyGameTweaks
 
         public void OnRoundStartSendHint()
         {
+            Room roomPeanut = Room.Get(RoomType.Lcz173);
+            roomPeanut.Color = new Color(1f, 0f, 0f);
+
+            Door door = Door.Get(DoorType.Scp173Gate);
+            door.DoorLockType = DoorLockType.Isolation;
+            door.AllowsScp106 = false;
+
             Room[] allRooms = Room.List.ToArray();
             List<RoomType> forbiddenRoomTypes = new List<RoomType>
             {
@@ -93,7 +92,10 @@ namespace EarlyGameTweaks
                 RoomType.EzCollapsedTunnel,
                 RoomType.EzGateA,
                 RoomType.EzGateB,
-                RoomType.Lcz173
+                RoomType.Lcz173,
+                RoomType.HczTesla,
+                RoomType.EzShelter,
+                RoomType.Pocket,
             };
 
             AudioPlayer audioPlayer = AudioPlayer.CreateOrGet($"Radio", onIntialCreation: (p) =>
@@ -133,7 +135,7 @@ namespace EarlyGameTweaks
                 {
                     if (item.IsArmor)
                     {
-                        if (CustomItem.Get(667).Check(item))
+                        if (CustomItem.Get(900).Check(item))
                         {
                             ev.IsAllowed = false;
                             ev.Pickup.Destroy();
@@ -161,7 +163,7 @@ namespace EarlyGameTweaks
 
             if (settingBase is SSKeybindSetting ssKeybindSetting && ssKeybindSetting.SyncIsPressed)
             {
-                if ((ssKeybindSetting.SettingId == 10003 || ssKeybindSetting.SettingId == 10004 || ssKeybindSetting.SettingId == 10005 || ssKeybindSetting.SettingId == 10006) && ActiveAbility.AllActiveAbilities.TryGetValue(player, out var abilities))
+                if ((ssKeybindSetting.SettingId == 10003 || ssKeybindSetting.SettingId == 10004 || ssKeybindSetting.SettingId == 10005 || ssKeybindSetting.SettingId == 10006 || ssKeybindSetting.SettingId == 10007) && ActiveAbility.AllActiveAbilities.TryGetValue(player, out var abilities))
                 {
                     string response = String.Empty;
                     if (ssKeybindSetting.SettingId == 10003)
@@ -211,6 +213,19 @@ namespace EarlyGameTweaks
                         {
                             furyAbility.SelectAbility(player);
                             furyAbility.UseAbility(player);
+                        }
+                        else
+                        {
+                            player.ShowHint(response);
+                        }
+                    }
+                    else if (ssKeybindSetting.SettingId == 10007)
+                    {
+                        var zombieHealingAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(HealingMist));
+                        if (zombieHealingAbility != null && zombieHealingAbility.CanUseAbility(player, out response))
+                        {
+                            zombieHealingAbility.SelectAbility(player);
+                            zombieHealingAbility.UseAbility(player);
                         }
                         else
                         {
