@@ -61,6 +61,9 @@
     <Reference Include="AudioPlayerApi">
       <HintPath>..\..\Games\AudioPlayerApi.dll</HintPath>
     </Reference>
+    <Reference Include="CustomizableUIMeow %281%29">
+      <HintPath>..\..\..\Downloads\CustomizableUIMeow (1).dll</HintPath>
+    </Reference>
     <Reference Include="MapEditorReborn %281%29">
       <HintPath>..\..\..\Downloads\MapEditorReborn (1).dll</HintPath>
     </Reference>
@@ -114,6 +117,7 @@
   <ItemGroup>
     <Compile Include="Abilities\Active\BerserkerFury.cs" />
     <Compile Include="Abilities\Active\ChargeAbility.cs" />
+    <Compile Include="Abilities\Active\Pickpocket.cs" />
     <Compile Include="Abilities\Active\DoorPicking.cs" />
     <Compile Include="Abilities\Active\HealingMist.cs" />
     <Compile Include="Abilities\Active\ZoneBlackout.cs" />
@@ -127,6 +131,7 @@
     <Compile Include="API\StartTeam.cs" />
     <Compile Include="CustomRoleEventHandler.cs" />
     <Compile Include="CustomRoleMethods.cs" />
+    <Compile Include="Items\Adrenaline\TestAdrenaline.cs" />
     <Compile Include="Items\Grenades\SmokeGrenade.cs" />
     <Compile Include="Items\Grenades\TestDummy.cs" />
     <Compile Include="Items\Medkits\DefiNtf.cs" />
@@ -165,6 +170,7 @@
     <Compile Include="Roles\ChaosInsurgency\Berserker.cs" />
     <Compile Include="Roles\ChaosInsurgency\ChaosMedic.cs" />
     <Compile Include="Roles\ChaosInsurgency\Breacher.cs" />
+    <Compile Include="Roles\ClassD\Thief.cs" />
     <Compile Include="Roles\ClassD\Dwarf.cs" />
     <Compile Include="Roles\ClassD\LockPicker.cs" />
     <Compile Include="Roles\ClassD\LuckyMan.cs" />

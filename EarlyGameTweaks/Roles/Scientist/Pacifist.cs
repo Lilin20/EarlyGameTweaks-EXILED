@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EarlyGameTweaks.Abilities.Passive;
 using EarlyGameTweaks.API;
+using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
 using Exiled.API.Features.Spawn;
@@ -50,6 +51,16 @@ namespace EarlyGameTweaks.Roles.Scientist
                 RestrictUsingItems = false,
                 RestrictPickingUpItems = true,
                 RestrictDroppingItems = false,
+            },
+
+            new EffectEnabler()
+            {
+                Name = "Pacifist's Tempest Boots [Passive]",
+                Description = "*Terraria type beat*",
+                EffectsToApply =
+                {
+                    {EffectType.MovementBoost, 30}
+                }
             }
         };
         public override SpawnProperties SpawnProperties { get; set; } = new()

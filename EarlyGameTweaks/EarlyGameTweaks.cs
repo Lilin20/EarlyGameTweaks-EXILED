@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Discord;
 using EarlyGameTweaks.API;
 using EarlyGameTweaks.Roles.ChaosInsurgency;
 using EarlyGameTweaks.Roles.ClassD;
@@ -12,6 +13,7 @@ using Exiled.CustomItems.API.Features;
 using Exiled.CustomRoles.API;
 using Exiled.CustomRoles.API.Features;
 using UserSettings.ServerSpecific;
+using static InventorySystem.Items.Firearms.Modules.LinearAdsModule;
 
 namespace EarlyGameTweaks
 {
@@ -34,6 +36,7 @@ namespace EarlyGameTweaks
         public SpecialAgentGuard sagc = new SpecialAgentGuard();
         public ZombieJuggernaut zjc = new ZombieJuggernaut();
         public MedicZombie zmc = new MedicZombie();
+        public Thief thiefc = new Thief();
 
         public List<ExplosionGrenadeProjectile> GrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
         public List<ExplosionGrenadeProjectile> AlertGrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
@@ -57,9 +60,9 @@ namespace EarlyGameTweaks
             CustomWeapon.RegisterItems();
 
             CustomRoleEventHandler = new CustomRoleEventHandler(this);
-            AudioClipStorage.LoadClip("C:\\Users\\lilin\\AppData\\Roaming\\EXILED\\Audio\\test.ogg", "test");
-            AudioClipStorage.LoadClip("C:\\Users\\lilin\\AppData\\Roaming\\EXILED\\Audio\\alarm.ogg", "alarmSound");
-            AudioClipStorage.LoadClip("C:\\Users\\lilin\\AppData\\Roaming\\EXILED\\Audio\\berserker2.ogg", "berserker2");
+            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\test.ogg", "test");
+            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\alarm.ogg", "alarmSound");
+            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\berserker2.ogg", "berserker2");
 
             tc.Register();
             dc.Register();
@@ -74,6 +77,7 @@ namespace EarlyGameTweaks
             sagc.Register();
             zjc.Register();
             zmc.Register();
+            thiefc.Register();
 
             foreach (CustomRole role in CustomRole.Registered)
             {
@@ -139,6 +143,7 @@ namespace EarlyGameTweaks
             sagc.Unregister();
             zjc.Unregister();
             zmc.Unregister();
+            thiefc.Unregister();
 
             CustomAbility.UnregisterAbilities();
 

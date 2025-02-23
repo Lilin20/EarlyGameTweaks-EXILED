@@ -113,10 +113,10 @@ namespace EarlyGameTweaks
 
         public void FinishingRecall(FinishingRecallEventArgs ev)
         {
-            Log.Debug($"{nameof(FinishingRecall)}: Selecting random zombie role.");
+            Log.Debug("VVUP Custom Roles: FinishingRecall: Selecting random zombie role.");
             if (this.Plugin.Roles.ContainsKey(StartTeam.Scp) && ev.Target != null)
             {
-                Log.Debug(string.Format("{0}: List count {1}", "FinishingRecall", this.Plugin.Roles[StartTeam.Scp].Count));
+                Log.Debug(string.Format("VVUP Custom Roles: {0}: List count {1}", "FinishingRecall", this.Plugin.Roles[StartTeam.Scp].Count));
                 List<ICustomRole>.Enumerator enumerator = this.Plugin.Roles[StartTeam.Scp].GetEnumerator();
                 CustomRole customRole = CustomRoleMethods.GetCustomRole(ref enumerator, false, true);
                 Log.Debug("VVUP Custom Roles: Got custom role " + ((customRole != null) ? customRole.Name : null));

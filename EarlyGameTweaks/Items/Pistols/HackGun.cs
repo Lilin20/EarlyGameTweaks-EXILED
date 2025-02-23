@@ -96,7 +96,7 @@ namespace EarlyGameTweaks.Items
                     }
                     else
                     {
-                        door.Lock(5, DoorLockType.Regular079);
+                        door.Lock(5, DoorLockType.Lockdown2176);
                     }
                 }
             }

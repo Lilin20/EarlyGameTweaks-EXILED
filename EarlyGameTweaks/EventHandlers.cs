@@ -4,7 +4,6 @@ using System.Linq;
 using EarlyGameTweaks.Abilities.Active;
 using Exiled.API.Enums;
 using Exiled.API.Features;
-using Exiled.API.Features.Items;
 using Exiled.CustomItems.API.Features;
 using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Player;
@@ -14,8 +13,8 @@ using UnityEngine;
 using UserSettings.ServerSpecific;
 using PlayerRoles;
 using Exiled.API.Features.Doors;
-using Exiled.Permissions;
-using Interactables.Interobjects.DoorUtils;
+using Exiled.Events.EventArgs.Scp939;
+using Exiled.API.Features.Roles;
 
 namespace EarlyGameTweaks
 {
@@ -112,7 +111,7 @@ namespace EarlyGameTweaks
             // As example we will add clip
             audioPlayer.AddClip("alarmSound", loop: true, volume: 1, destroyOnEnd: false);
 
-            foreach (Player player in Exiled.API.Features.Player.List)
+            foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
             {
                 if (player.Role == RoleTypeId.FacilityGuard)
                 {
@@ -131,7 +130,7 @@ namespace EarlyGameTweaks
         {
             if (ev.Pickup.Category == ItemCategory.Armor)
             {
-                foreach (Item item in ev.Player.Items)
+                foreach (Exiled.API.Features.Items.Item item in ev.Player.Items)
                 {
                     if (item.IsArmor)
                     {
@@ -150,6 +149,14 @@ namespace EarlyGameTweaks
             }
         }
 
+        public void OnLunging(LungingEventArgs ev)
+        {
+            if (ev.Player.Role is Scp939Role scp)
+            {
+               
+            }
+        }
+
         public void OnSettingValueReceived(ReferenceHub hub, ServerSpecificSettingBase settingBase)
         {
             if (!Exiled.API.Features.Player.TryGet(hub, out Exiled.API.Features.Player player))
@@ -163,7 +170,7 @@ namespace EarlyGameTweaks
 
             if (settingBase is SSKeybindSetting ssKeybindSetting && ssKeybindSetting.SyncIsPressed)
             {
-                if ((ssKeybindSetting.SettingId == 10003 || ssKeybindSetting.SettingId == 10004 || ssKeybindSetting.SettingId == 10005 || ssKeybindSetting.SettingId == 10006 || ssKeybindSetting.SettingId == 10007) && ActiveAbility.AllActiveAbilities.TryGetValue(player, out var abilities))
+                if ((ssKeybindSetting.SettingId == 10003 || ssKeybindSetting.SettingId == 10004 || ssKeybindSetting.SettingId == 10005 || ssKeybindSetting.SettingId == 10006 || ssKeybindSetting.SettingId == 10007 || ssKeybindSetting.SettingId == 10008) && ActiveAbility.AllActiveAbilities.TryGetValue(player, out var abilities))
                 {
                     string response = String.Empty;
                     if (ssKeybindSetting.SettingId == 10003)
@@ -226,6 +233,19 @@ namespace EarlyGameTweaks
                         {
                             zombieHealingAbility.SelectAbility(player);
                             zombieHealingAbility.UseAbility(player);
+                        }
+                        else
+                        {
+                            player.ShowHint(response);
+                        }
+                    }
+                    else if (ssKeybindSetting.SettingId == 10008)
+                    {
+                        var pickpocketAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(Pickpocket));
+                        if (pickpocketAbility != null && pickpocketAbility.CanUseAbility(player, out response))
+                        {
+                            pickpocketAbility.SelectAbility(player);
+                            pickpocketAbility.UseAbility(player);
                         }
                         else
                         {

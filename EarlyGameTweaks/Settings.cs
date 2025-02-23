@@ -28,6 +28,7 @@ namespace EarlyGameTweaks
             settings.Add(new SSKeybindSetting(10005, "Charge [Ability]", UnityEngine.KeyCode.B, true, "B"));
             settings.Add(new SSKeybindSetting(10006, "Berserker's Fury [Ability]", UnityEngine.KeyCode.B, true, "B"));
             settings.Add(new SSKeybindSetting(10007, "Healing Mist [Ability]", UnityEngine.KeyCode.B, true, "B"));
+            settings.Add(new SSKeybindSetting(10008, "NOPE [Ability]", UnityEngine.KeyCode.B, true, "B"));
 
             return [.. settings];
         }

@@ -7,6 +7,8 @@ using Exiled.API.Features.Spawn;
 using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp106;
+using MEC;
+using PlayerRoles;
 using UnityEngine;
 using Player = Exiled.Events.Handlers.Player;
 
@@ -19,8 +21,6 @@ namespace EarlyGameTweaks.Items
         public override string Name { get; set; } = "Ass im Ärmel";
         public override string Description { get; set; } = "Du wusstest schon seit längerem das dir dies irgendwann mal sehr viel Glück bringen wird.";
         public override float Weight { get; set; } = 0.5f;
-
-        public Vector3 oldPlayerPos { get; set; }
 
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
@@ -62,7 +62,6 @@ namespace EarlyGameTweaks.Items
         protected override void SubscribeEvents()
         {
             Player.UsingItemCompleted += OnUsingPDEscape;
-            Exiled.Events.Handlers.Scp106.Attacking += OnAttacking;
 
             base.SubscribeEvents();
         }
@@ -70,28 +69,42 @@ namespace EarlyGameTweaks.Items
         protected override void UnsubscribeEvents()
         {
             Player.UsingItemCompleted -= OnUsingPDEscape;
-            Exiled.Events.Handlers.Scp106.Attacking -= OnAttacking;
 
             base.UnsubscribeEvents();
-        }
-
-        private void OnAttacking(AttackingEventArgs ev)
-        {
-            oldPlayerPos = ev.Player.Position;
         }
 
         private void OnUsingPDEscape(UsingItemCompletedEventArgs ev)
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
+            ev.IsAllowed = false;
 
             Room room = Room.Get(RoomType.Pocket);
 
             if (room.Players.Contains(ev.Player))
             {
-                ev.Player.Teleport(oldPlayerPos + Vector3.up);
-                ev.Player.DropItems();
+                ev.Player.EnableEffect(EffectType.Invisible, 15f, false);
+                ev.Player.EnableEffect(EffectType.Poisoned, 1, 10f, false);
+                ev.Player.EnableEffect(EffectType.SilentWalk, 255, 15f, false);
+
+                foreach (Exiled.API.Features.Player larry in Exiled.API.Features.Player.List)
+                {
+                    if (larry.Role == RoleTypeId.Scp106)
+                    {
+                        ev.Player.Teleport(larry);
+                    }
+                }
+
+                for (int i = 0; i <= 15; i++)
+                {
+                    Timing.CallDelayed(1f, () =>
+                    {
+                        ev.Player.PlaceBlood(ev.Player.Position + Vector3.down);
+                    });
+                }
             }
+
+            ev.Item.Destroy();
         }
     }
 }

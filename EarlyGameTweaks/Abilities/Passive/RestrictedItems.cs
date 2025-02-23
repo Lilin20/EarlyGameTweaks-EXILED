@@ -23,12 +23,6 @@ namespace EarlyGameTweaks.Abilities.Passive
             Exiled.Events.Handlers.Player.UsingItem += OnUsingItem;
             Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem;
             Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
-
-            Timing.CallDelayed(1.5f, () =>
-            {
-                player.EnableEffect(Exiled.API.Enums.EffectType.MovementBoost, 20);
-                player.EnableEffect(Exiled.API.Enums.EffectType.Vitality);
-            });
         }
 
         protected override void AbilityRemoved(Player player)

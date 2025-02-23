@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Roles.SCP
 {
     public class MedicZombie : CustomRole, ICustomRole
     {
-        public int Chance { get; set; } = 25;
+        public int Chance { get; set; } = 20;
         public override uint Id { get; set; } = 501;
         public override int MaxHealth { get; set; } = 450;
         public override string Name { get; set; } = "<color=#FF0000>SCP-049-2 - Medic</color>";
@@ -27,15 +27,6 @@ namespace EarlyGameTweaks.Roles.SCP
 
         public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
         {
-            new EffectEnabler()
-            {
-                Name = "Move Speed Reduction [Passive]",
-                Description = "Slows you down",
-                EffectsToApply = new Dictionary<EffectType, byte>()
-                {
-                    {EffectType.Slowness, 30},
-                },
-            },
             new HealingMist()
             {
                 Name = "Healing Mist [Active]",

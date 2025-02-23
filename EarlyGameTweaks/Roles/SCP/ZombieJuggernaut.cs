@@ -20,7 +20,7 @@ namespace EarlyGameTweaks.Roles.SCP
         public override string Description { get; set; } = "Eine etwas mehr gepanzerte Art eines Zombies.";
         public override string CustomInfo { get; set; } = "SCP-049-2 - Juggernaut";
         public override RoleTypeId Role { get; set; } = RoleTypeId.Scp0492;
-        public int Chance { get; set; } = 15;
+        public int Chance { get; set; } = 20;
         public StartTeam StartTeam { get; set; } = StartTeam.Scp | StartTeam.Revived;
         public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
         {
