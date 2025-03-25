@@ -10,6 +10,7 @@ using Exiled.CustomRoles.API.Features;
 using Exiled.Events.EventArgs.Item;
 using Exiled.Events.EventArgs.Player;
 using InventorySystem.Items.Firearms.Attachments;
+using InventorySystem.Items.Firearms.Attachments.Components;
 using MEC;
 using PlayerStatsSystem;
 using UnityEngine;

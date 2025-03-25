@@ -29,7 +29,7 @@ namespace EarlyGameTweaks.Items
             {
                 new()
                 {
-                    Chance = 50,
+                    Chance = 75,
                     Location = SpawnLocationType.Inside914,
                 }
             },
@@ -77,6 +77,7 @@ namespace EarlyGameTweaks.Items
         {
             if (!Check(ev.Player.CurrentItem))
                 return;
+
             ev.IsAllowed = false;
 
             Room room = Room.Get(RoomType.Pocket);
@@ -93,14 +94,6 @@ namespace EarlyGameTweaks.Items
                     {
                         ev.Player.Teleport(larry);
                     }
-                }
-
-                for (int i = 0; i <= 15; i++)
-                {
-                    Timing.CallDelayed(1f, () =>
-                    {
-                        ev.Player.PlaceBlood(ev.Player.Position + Vector3.down);
-                    });
                 }
             }
 

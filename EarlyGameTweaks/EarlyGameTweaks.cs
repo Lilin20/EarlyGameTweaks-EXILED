@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Discord;
 using EarlyGameTweaks.API;
 using EarlyGameTweaks.Roles.ChaosInsurgency;
 using EarlyGameTweaks.Roles.ClassD;
@@ -12,8 +11,9 @@ using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.CustomItems.API.Features;
 using Exiled.CustomRoles.API;
 using Exiled.CustomRoles.API.Features;
+using HarmonyLib;
+using MEC;
 using UserSettings.ServerSpecific;
-using static InventorySystem.Items.Firearms.Modules.LinearAdsModule;
 
 namespace EarlyGameTweaks
 {
@@ -22,6 +22,7 @@ namespace EarlyGameTweaks
         public static EarlyGameTweaks Instance;
         public override PluginPriority Priority { get; } = PluginPriority.Medium;
         public EventHandlers EventHandlers;
+        public Harmony harmony = new Harmony("test.patch.gigachad");
 
         public Lockpicker tc = new Lockpicker();
         public Dwarf dc = new Dwarf();
@@ -48,12 +49,15 @@ namespace EarlyGameTweaks
         {
             EventHandlers = new EventHandlers();
             Instance = this;
+
             Exiled.Events.Handlers.Player.Shot += EventHandlers.OnShot;
 
             Exiled.Events.Handlers.Player.Verified += EventHandlers.OnVerify;
             Exiled.Events.Handlers.Player.PickingUpItem += EventHandlers.OnPickupArmor;
 
             Exiled.Events.Handlers.Scp096.AddingTarget += EventHandlers.OnRageStart;
+
+            //Exiled.Events.Handlers.Scp1344.ChangedStatus += EventHandlers.OnWearingGlasses;
 
             ServerSpecificSettingsSync.ServerOnSettingValueReceived += EventHandlers.OnSettingValueReceived;
 
@@ -112,6 +116,7 @@ namespace EarlyGameTweaks
             Exiled.Events.Handlers.Server.RoundStarted += CustomRoleEventHandler.OnRoundStarted;
             Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStartSendHint;
             Exiled.Events.Handlers.Server.RespawningTeam += CustomRoleEventHandler.OnRespawningTeam;
+            Exiled.Events.Handlers.Map.Generated += EventHandlers.OnMapGeneration;
             Exiled.Events.Handlers.Scp049.FinishingRecall += CustomRoleEventHandler.FinishingRecall;
             CustomAbility.RegisterAbilities();
 
@@ -145,11 +150,13 @@ namespace EarlyGameTweaks
             zmc.Unregister();
             thiefc.Unregister();
 
+            //harmony.UnpatchAll();
             CustomAbility.UnregisterAbilities();
 
             Exiled.Events.Handlers.Server.RoundStarted -= CustomRoleEventHandler.OnRoundStarted;
             Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStartSendHint;
             Exiled.Events.Handlers.Server.RespawningTeam -= CustomRoleEventHandler.OnRespawningTeam;
+            Exiled.Events.Handlers.Map.Generated -= EventHandlers.OnMapGeneration;
             Exiled.Events.Handlers.Scp049.FinishingRecall -= CustomRoleEventHandler.FinishingRecall;
 
             EventHandlers = null;

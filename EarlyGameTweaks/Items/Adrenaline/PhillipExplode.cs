@@ -18,20 +18,7 @@ namespace EarlyGameTweaks.Items
         public override string Description { get; set; } = "Stimuliert ein Gerät in einem Hirn. Der Stimulator sendet ein Signal zu einem bestimmten Neurolink aus. Aber für welches?";
         public override float Weight { get; set; } = 0.5f;
 
-        public override SpawnProperties SpawnProperties { get; set; } = new()
-        {
-            Limit = 1,
-            LockerSpawnPoints = new List<LockerSpawnPoint>
-            {
-                new()
-                {
-                    Chance = 10,
-                    Zone = ZoneType.LightContainment,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                }
-            }
-        };
+        public override SpawnProperties SpawnProperties { get; set; }
 
         protected override void SubscribeEvents()
         {

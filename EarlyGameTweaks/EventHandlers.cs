@@ -15,6 +15,13 @@ using PlayerRoles;
 using Exiled.API.Features.Doors;
 using Exiled.Events.EventArgs.Scp939;
 using Exiled.API.Features.Roles;
+using Exiled.Events.EventArgs.Scp1344;
+using UnityEngine.AI;
+using MEC;
+using static PlayerList;
+using PlayerStatsSystem;
+using Exiled.API.Features.DamageHandlers;
+using MapGeneration;
 
 namespace EarlyGameTweaks
 {
@@ -23,6 +30,7 @@ namespace EarlyGameTweaks
         public static List<GameObject> BlacklistedObjects = new();
         private readonly EarlyGameTweaks Plugin;
         private readonly Config _config;
+        public CoroutineHandle pathFinderCoroutine = new CoroutineHandle();
 
         public void OnShot(ShotEventArgs ev)
         {
@@ -67,6 +75,19 @@ namespace EarlyGameTweaks
         public void OnRageStart(AddingTargetEventArgs ev)
         {
             ev.Target.EnableEffect(EffectType.MovementBoost, 30, 5, false);
+        }
+
+        public void OnWearingGlasses(ChangedStatusEventArgs ev)
+        {
+            if (ev.Scp1344Status == InventorySystem.Items.Usables.Scp1344.Scp1344Status.Active)
+            {
+                ev.Player.EnableEffect(EffectType.FogControl, 5);
+            }
+        }
+
+        public void OnMapGeneration()
+        {
+            //navMeshCoroutine = Timing.RunCoroutine(OptimizeNavMeshCoroutine());
         }
 
         public void OnRoundStartSendHint()
@@ -255,5 +276,6 @@ namespace EarlyGameTweaks
                 }
             }
         }
+
     }
 }

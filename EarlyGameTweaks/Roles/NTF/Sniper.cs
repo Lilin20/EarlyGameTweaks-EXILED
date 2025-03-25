@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EarlyGameTweaks.Abilities.Passive;
 using EarlyGameTweaks.API;
+using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomRoles.API.Features;
@@ -53,6 +54,16 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
                 RestrictUsingItems = false,
                 RestrictPickingUpItems = true,
                 RestrictDroppingItems = false,
+            },
+
+            new EffectEnabler()
+            {
+                Name = "Adleraugen [Passive]",
+                Description = "Du kannst weiter sehen als andere Spieler.",
+                EffectsToApply =
+                {
+                    {EffectType.FogControl, 255}
+                }
             }
         };
 
