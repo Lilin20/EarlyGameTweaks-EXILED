@@ -19,7 +19,7 @@ namespace EarlyGameTweaks
     {
         public static ServerSpecificSettingBase[] GetSettings()
         {
-            List<ServerSpecificSettingBase> settings = [];
+s            List<ServerSpecificSettingBase> settings = new();
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
 
             settings.Add(new SSGroupHeader("Lilin's AIO - Ability Keybinds"));
@@ -30,7 +30,8 @@ namespace EarlyGameTweaks
             settings.Add(new SSKeybindSetting(10007, "Healing Mist [Ability]", UnityEngine.KeyCode.B, true, "B"));
             settings.Add(new SSKeybindSetting(10008, "NOPE [Ability]", UnityEngine.KeyCode.B, true, "B"));
 
-            return [.. settings];
+            StringBuilderPool.Shared.Return(stringBuilder);
+            return settings.ToArray();
         }
     }
 }

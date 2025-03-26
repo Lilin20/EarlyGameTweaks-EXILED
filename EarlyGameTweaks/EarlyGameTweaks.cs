@@ -24,144 +24,130 @@ namespace EarlyGameTweaks
         public EventHandlers EventHandlers;
         public Harmony harmony = new Harmony("test.patch.gigachad");
 
-        public Lockpicker tc = new Lockpicker();
-        public Dwarf dc = new Dwarf();
-        public DeltaAgent da = new DeltaAgent();
-        public Breacher bc = new Breacher();
-        public Pacifist pc = new Pacifist();
-        public ChaosMedic cm = new ChaosMedic();
-        public NtfMedic ntfm = new NtfMedic();
-        public LuckyMan lm = new LuckyMan();
-        public Sniper sc = new Sniper();
-        public Berserker berserkerc = new Berserker();
-        public SpecialAgentGuard sagc = new SpecialAgentGuard();
-        public ZombieJuggernaut zjc = new ZombieJuggernaut();
-        public MedicZombie zmc = new MedicZombie();
-        public Thief thiefc = new Thief();
+        private readonly List<ICustomRole> customRoles = new()
+        {
+            new Lockpicker(),
+            new Dwarf(),
+            new DeltaAgent(),
+            new Breacher(),
+            new Pacifist(),
+            new ChaosMedic(),
+            new NtfMedic(),
+            new LuckyMan(),
+            new Sniper(),
+            new Berserker(),
+            new SpecialAgentGuard(),
+            new ZombieJuggernaut(),
+            new MedicZombie(),
+            new Thief()
+        };
 
-        public List<ExplosionGrenadeProjectile> GrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
-        public List<ExplosionGrenadeProjectile> AlertGrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
-
+        public List<ExplosionGrenadeProjectile> GrenadeProjectiles { get; set; } = new();
+        public List<ExplosionGrenadeProjectile> AlertGrenadeProjectiles { get; set; } = new();
         public Dictionary<StartTeam, List<ICustomRole>> Roles { get; } = new();
         public CustomRoleEventHandler CustomRoleEventHandler;
 
         public override void OnEnabled()
         {
-            EventHandlers = new EventHandlers();
             Instance = this;
-
-            Exiled.Events.Handlers.Player.Shot += EventHandlers.OnShot;
-
-            Exiled.Events.Handlers.Player.Verified += EventHandlers.OnVerify;
-            Exiled.Events.Handlers.Player.PickingUpItem += EventHandlers.OnPickupArmor;
-
-            Exiled.Events.Handlers.Scp096.AddingTarget += EventHandlers.OnRageStart;
-
-            //Exiled.Events.Handlers.Scp1344.ChangedStatus += EventHandlers.OnWearingGlasses;
-
-            ServerSpecificSettingsSync.ServerOnSettingValueReceived += EventHandlers.OnSettingValueReceived;
-
-            CustomWeapon.RegisterItems();
-
-            CustomRoleEventHandler = new CustomRoleEventHandler(this);
-            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\test.ogg", "test");
-            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\alarm.ogg", "alarmSound");
-            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\berserker2.ogg", "berserker2");
-
-            tc.Register();
-            dc.Register();
-            da.Register();
-            bc.Register();
-            pc.Register();
-            cm.Register();
-            ntfm.Register();
-            lm.Register();
-            sc.Register();
-            berserkerc.Register();
-            sagc.Register();
-            zjc.Register();
-            zmc.Register();
-            thiefc.Register();
-
-            foreach (CustomRole role in CustomRole.Registered)
-            {
-                if (role is ICustomRole custom)
-                {
-                    Log.Debug($"Adding {role.Name} to dictionary...");
-                    StartTeam team;
-                    if (custom.StartTeam.HasFlag(StartTeam.Chaos))
-                        team = StartTeam.Chaos;
-                    else if (custom.StartTeam.HasFlag(StartTeam.Guard))
-                        team = StartTeam.Guard;
-                    else if (custom.StartTeam.HasFlag(StartTeam.Ntf))
-                        team = StartTeam.Ntf;
-                    else if (custom.StartTeam.HasFlag(StartTeam.Scientist))
-                        team = StartTeam.Scientist;
-                    else if (custom.StartTeam.HasFlag(StartTeam.ClassD))
-                        team = StartTeam.ClassD;
-                    else if (custom.StartTeam.HasFlag(StartTeam.Scp))
-                        team = StartTeam.Scp;
-                    else
-                        team = StartTeam.Other;
-
-                    if (!Roles.ContainsKey(team))
-                        Roles.Add(team, new());
-
-                    for (int i = 0; i < role.SpawnProperties.Limit; i++)
-                        Roles[team].Add(custom);
-                    Log.Debug($"Roles {team} now has {Roles[team].Count} elements.");
-                }
-            }
-
-            Exiled.Events.Handlers.Server.RoundStarted += CustomRoleEventHandler.OnRoundStarted;
-            Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStartSendHint;
-            Exiled.Events.Handlers.Server.RespawningTeam += CustomRoleEventHandler.OnRespawningTeam;
-            Exiled.Events.Handlers.Map.Generated += EventHandlers.OnMapGeneration;
-            Exiled.Events.Handlers.Scp049.FinishingRecall += CustomRoleEventHandler.FinishingRecall;
+            EventHandlers = new EventHandlers();
+            RegisterEvents();
+            LoadAudioClips();
+            RegisterCustomRoles();
+            InitializeRoleDictionary();
             CustomAbility.RegisterAbilities();
-
             base.OnEnabled();
         }
 
         public override void OnDisabled()
         {
+            UnregisterEvents();
+            UnregisterCustomRoles();
+            CustomAbility.UnregisterAbilities();
+            EventHandlers = null;
+            Instance = null;
+            base.OnDisabled();
+        }
+
+        private void RegisterEvents()
+        {
+            Exiled.Events.Handlers.Player.Shot += EventHandlers.OnShot;
+            Exiled.Events.Handlers.Player.Verified += EventHandlers.OnVerify;
+            Exiled.Events.Handlers.Player.PickingUpItem += EventHandlers.OnPickupArmor;
+            Exiled.Events.Handlers.Scp096.AddingTarget += EventHandlers.OnRageStart;
+            ServerSpecificSettingsSync.ServerOnSettingValueReceived += EventHandlers.OnSettingValueReceived;
+
+            CustomRoleEventHandler = new CustomRoleEventHandler(this);
+            Exiled.Events.Handlers.Server.RoundStarted += CustomRoleEventHandler.OnRoundStarted;
+            Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStartSendHint;
+            Exiled.Events.Handlers.Server.RespawningTeam += CustomRoleEventHandler.OnRespawningTeam;
+            Exiled.Events.Handlers.Map.Generated += EventHandlers.OnMapGeneration;
+            Exiled.Events.Handlers.Scp049.FinishingRecall += CustomRoleEventHandler.FinishingRecall;
+        }
+
+        private void UnregisterEvents()
+        {
             Exiled.Events.Handlers.Player.Shot -= EventHandlers.OnShot;
             Exiled.Events.Handlers.Player.Verified -= EventHandlers.OnVerify;
             Exiled.Events.Handlers.Player.PickingUpItem -= EventHandlers.OnPickupArmor;
-
             Exiled.Events.Handlers.Scp096.AddingTarget -= EventHandlers.OnRageStart;
-
             ServerSpecificSettingsSync.ServerOnSettingValueReceived -= EventHandlers.OnSettingValueReceived;
-
-            CustomWeapon.UnregisterItems();
-
-            tc.Unregister();
-            dc.Unregister();
-            da.Unregister();
-            bc.Unregister();
-            pc.Unregister();
-            cm.Unregister();
-            ntfm.Unregister();
-            lm.Unregister();
-            sc.Unregister();
-            berserkerc.Unregister();
-            sagc.Unregister();
-            zjc.Unregister();
-            zmc.Unregister();
-            thiefc.Unregister();
-
-            //harmony.UnpatchAll();
-            CustomAbility.UnregisterAbilities();
 
             Exiled.Events.Handlers.Server.RoundStarted -= CustomRoleEventHandler.OnRoundStarted;
             Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStartSendHint;
             Exiled.Events.Handlers.Server.RespawningTeam -= CustomRoleEventHandler.OnRespawningTeam;
             Exiled.Events.Handlers.Map.Generated -= EventHandlers.OnMapGeneration;
             Exiled.Events.Handlers.Scp049.FinishingRecall -= CustomRoleEventHandler.FinishingRecall;
+        }
 
-            EventHandlers = null;
-            Instance = null;
-            base.OnDisabled();
+        private void LoadAudioClips()
+        {
+            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\test.ogg", "test");
+            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\alarm.ogg", "alarmSound");
+            AudioClipStorage.LoadClip("C:\\Users\\Administrator\\AppData\\Roaming\\EXILED\\Audio\\berserker2.ogg", "berserker2");
+        }
+
+        private void RegisterCustomRoles()
+        {
+            foreach (var role in customRoles)
+                role.Register();
+        }
+
+        private void UnregisterCustomRoles()
+        {
+            foreach (var role in customRoles)
+                role.Unregister();
+        }
+
+        private void InitializeRoleDictionary()
+        {
+            foreach (CustomRole role in CustomRole.Registered)
+            {
+                if (role is ICustomRole custom)
+                {
+                    Log.Debug($"Adding {role.Name} to dictionary...");
+                    StartTeam team = DetermineStartTeam(custom.StartTeam);
+
+                    if (!Roles.ContainsKey(team))
+                        Roles.Add(team, new());
+
+                    for (int i = 0; i < role.SpawnProperties.Limit; i++)
+                        Roles[team].Add(custom);
+
+                    Log.Debug($"Roles {team} now has {Roles[team].Count} elements.");
+                }
+            }
+        }
+
+        private StartTeam DetermineStartTeam(StartTeam startTeam)
+        {
+            if (startTeam.HasFlag(StartTeam.Chaos)) return StartTeam.Chaos;
+            if (startTeam.HasFlag(StartTeam.Guard)) return StartTeam.Guard;
+            if (startTeam.HasFlag(StartTeam.Ntf)) return StartTeam.Ntf;
+            if (startTeam.HasFlag(StartTeam.Scientist)) return StartTeam.Scientist;
+            if (startTeam.HasFlag(StartTeam.ClassD)) return StartTeam.ClassD;
+            if (startTeam.HasFlag(StartTeam.Scp)) return StartTeam.Scp;
+            return StartTeam.Other;
         }
     }
 }

@@ -22,19 +22,16 @@ namespace EarlyGameTweaks.Roles.ClassD
         public int Chance { get; set; } = 15;
         public StartTeam StartTeam { get; set; } = StartTeam.ClassD;
         public override List<CustomAbility> CustomAbilities { get; set; }
-        public List<EffectType> GoodEffects { get; set; } = new List<EffectType> { EffectType.MovementBoost, EffectType.Vitality, EffectType.Invigorated };
+        public List<EffectType> GoodEffects { get; set; } = new() { EffectType.MovementBoost, EffectType.Vitality, EffectType.Invigorated };
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
-            RoleSpawnPoints =
-            [
-                new()
-                {
-                    Role = RoleTypeId.ClassD,
-                }
-            ]
+            RoleSpawnPoints = new List<RoleSpawnPoint>
+            {
+                new() { Role = RoleTypeId.ClassD }
+            }
         };
-        public bool _canOpenWithoutPerms = true;
+        private bool _canOpenWithoutPerms = true;
 
         protected override void SubscribeEvents()
         {
@@ -54,34 +51,26 @@ namespace EarlyGameTweaks.Roles.ClassD
             base.UnsubscribeEvents();
         }
 
-        public void OnHurt(HurtingEventArgs ev)
+        private void OnHurt(HurtingEventArgs ev)
         {
-            if (!Check(ev.Player))
+            if (!Check(ev.Player) || ev.Player == null)
                 return;
 
-            if (ev.Player == null)
-                return;
-
-            float random = UnityEngine.Random.value;
-            if (random >= 0.4f)
+            if (UnityEngine.Random.value >= 0.4f)
             {
                 ev.DamageHandler.Damage = 0;
-                System.Random randomEffectIndex = new System.Random();
-
-                EffectType randomEffect = GoodEffects[randomEffectIndex.Next(GoodEffects.Count)];
+                var randomEffect = GoodEffects[new System.Random().Next(GoodEffects.Count)];
                 ev.Player.EnableEffect(randomEffect, 20, 2f);
             }
         }
 
-        public void OnTeslaTrigger(TriggeringTeslaEventArgs ev)
+        private void OnTeslaTrigger(TriggeringTeslaEventArgs ev)
         {
-            if (!Check(ev.Player))
-                return;
-
-            ev.IsAllowed = false;
+            if (Check(ev.Player))
+                ev.IsAllowed = false;
         }
 
-        public void OnSpawned(SpawnedEventArgs ev)
+        private void OnSpawned(SpawnedEventArgs ev)
         {
             if (!Check(ev.Player))
                 return;
@@ -95,15 +84,10 @@ namespace EarlyGameTweaks.Roles.ClassD
             });
         }
 
-        public void OnDoorOpening(InteractingDoorEventArgs ev)
+        private void OnDoorOpening(InteractingDoorEventArgs ev)
         {
-            if (!Check(ev.Player))
-                return;
-
-            if (_canOpenWithoutPerms && ev.Door.IsKeycardDoor)
-            {
+            if (Check(ev.Player) && _canOpenWithoutPerms && ev.Door.IsKeycardDoor)
                 ev.Door.IsOpen = true;
-            }
         }
 
         public override List<string> Inventory { get; set; } = new()

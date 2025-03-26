@@ -17,13 +17,9 @@ namespace EarlyGameTweaks.Abilities.Active
         private readonly List<CoroutineHandle> coroutines = new();
 
         public override string Name { get; set; } = "Healing Mist";
-
         public override string Description { get; set; } =
             "Activates a short-term spray of chemicals which will heal and protect allies for a short duration.";
-
         public override float Duration { get; set; } = 15f;
-        public string UsingAbility { get; set; } = "Oozing out some healing chemicals...";
-
         public override float Cooldown { get; set; } = 180f;
 
         [Description("The amount healed every second the ability is active.")]
@@ -32,43 +28,55 @@ namespace EarlyGameTweaks.Abilities.Active
         [Description("The amount of AHP given when the ability ends.")]
         public ushort ProtectionAmount { get; set; } = 75;
 
+        private const float MaxDistanceSquared = 144f;
+        private const float HealInterval = 0.75f;
+
+        public string UsingAbilityMessage { get; set; } = "Oozing out some healing chemicals...";
+
         protected override void AbilityUsed(Player player)
         {
-            player.ShowHint(UsingAbility, 5f);
-            ActivateMist(player);
+            player.ShowHint(UsingAbilityMessage, 5f);
+            StartHealingMist(player);
         }
 
         protected override void UnsubscribeEvents()
         {
-            foreach (CoroutineHandle handle in coroutines)
-                Timing.KillCoroutines(handle);
+            coroutines.ForEach(Timing.KillCoroutines);
             base.UnsubscribeEvents();
         }
 
-        private void ActivateMist(Player ply)
+        private void StartHealingMist(Player activator)
         {
-            foreach (Player player in Player.List)
+            var allies = Player.List.Where(p => p.Role.Side == activator.Role.Side && p != activator);
+            foreach (var ally in allies)
             {
-                if (player.Role.Side == ply.Role.Side && player != ply)
-                    coroutines.Add(Timing.RunCoroutine(DoMist(ply, player)));
+                coroutines.Add(Timing.RunCoroutine(ApplyHealingMist(activator, ally)));
             }
         }
 
-        private IEnumerator<float> DoMist(Player activator, Player player)
+        private IEnumerator<float> ApplyHealingMist(Player activator, Player ally)
         {
             for (int i = 0; i < Duration; i++)
             {
-                if (player.Health + HealAmount >= player.MaxHealth ||
-                    (player.Position - activator.Position).sqrMagnitude > 144f)
+                if (ShouldSkipHealing(activator, ally))
                     continue;
 
-                player.Health += HealAmount;
-
-                yield return Timing.WaitForSeconds(0.75f);
+                ally.Health = Math.Min(ally.Health + HealAmount, ally.MaxHealth);
+                yield return Timing.WaitForSeconds(HealInterval);
             }
 
-            if ((activator.Position - player.Position).sqrMagnitude < 144f)
-                player.ArtificialHealth += ProtectionAmount;
+            if (IsWithinRange(activator, ally))
+                ally.ArtificialHealth += ProtectionAmount;
+        }
+
+        private bool ShouldSkipHealing(Player activator, Player ally)
+        {
+            return ally.Health >= ally.MaxHealth || !IsWithinRange(activator, ally);
+        }
+
+        private bool IsWithinRange(Player activator, Player ally)
+        {
+            return (activator.Position - ally.Position).sqrMagnitude <= MaxDistanceSquared;
         }
     }
 }

@@ -20,54 +20,48 @@ namespace EarlyGameTweaks.Abilities.Passive
         protected override void AbilityAdded(Player player)
         {
             PlayersWithRestrictedItemsEffect.Add(player);
-            Exiled.Events.Handlers.Player.UsingItem += OnUsingItem;
-            Exiled.Events.Handlers.Player.PickingUpItem += OnPickingUpItem;
-            Exiled.Events.Handlers.Player.DroppingItem += OnDroppingItem;
+            Exiled.Events.Handlers.Player.UsingItem += OnItemEvent;
+            Exiled.Events.Handlers.Player.PickingUpItem += OnItemEvent;
+            Exiled.Events.Handlers.Player.DroppingItem += OnItemEvent;
         }
 
         protected override void AbilityRemoved(Player player)
         {
             PlayersWithRestrictedItemsEffect.Remove(player);
-            Exiled.Events.Handlers.Player.UsingItem -= OnUsingItem;
-            Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUpItem;
-            Exiled.Events.Handlers.Player.DroppingItem -= OnDroppingItem;
+            Exiled.Events.Handlers.Player.UsingItem -= OnItemEvent;
+            Exiled.Events.Handlers.Player.PickingUpItem -= OnItemEvent;
+            Exiled.Events.Handlers.Player.DroppingItem -= OnItemEvent;
             player.DisableAllEffects();
         }
 
-        private void OnUsingItem(UsingItemEventArgs ev)
+        private void OnItemEvent(object sender, System.EventArgs e)
         {
-            if (!RestrictUsingItems)
+            if (e is UsingItemEventArgs usingItemEvent)
             {
-                return;
+                if (RestrictUsingItems && ShouldRestrict(usingItemEvent.Player, usingItemEvent.Item.Type))
+                {
+                    usingItemEvent.IsAllowed = false;
+                }
             }
-            if (PlayersWithRestrictedItemsEffect.Contains(ev.Player) && RestrictedItemList != null && RestrictedItemList.Contains(ev.Item.Type))
+            else if (e is PickingUpItemEventArgs pickingUpItemEvent)
             {
-                ev.IsAllowed = false;
+                if (RestrictPickingUpItems && ShouldRestrict(pickingUpItemEvent.Player, pickingUpItemEvent.Pickup.Type))
+                {
+                    pickingUpItemEvent.IsAllowed = false;
+                }
+            }
+            else if (e is DroppingItemEventArgs droppingItemEvent)
+            {
+                if (RestrictDroppingItems && ShouldRestrict(droppingItemEvent.Player, droppingItemEvent.Item.Type))
+                {
+                    droppingItemEvent.IsAllowed = false;
+                }
             }
         }
 
-        private void OnPickingUpItem(PickingUpItemEventArgs ev)
+        private bool ShouldRestrict(Player player, ItemType itemType)
         {
-            if (!RestrictPickingUpItems)
-            {
-                return;
-            }
-            if (PlayersWithRestrictedItemsEffect.Contains(ev.Player) && RestrictedItemList != null && RestrictedItemList.Contains(ev.Pickup.Type))
-            {
-                ev.IsAllowed = false;
-            }
-        }
-
-        private void OnDroppingItem(DroppingItemEventArgs ev)
-        {
-            if (!RestrictDroppingItems)
-            {
-                return;
-            }
-            if (PlayersWithRestrictedItemsEffect.Contains(ev.Player) && RestrictedItemList != null && RestrictedItemList.Contains(ev.Item.Type))
-            {
-                ev.IsAllowed = false;
-            }
+            return PlayersWithRestrictedItemsEffect.Contains(player) && RestrictedItemList != null && RestrictedItemList.Contains(itemType);
         }
     }
 }

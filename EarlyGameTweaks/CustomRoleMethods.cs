@@ -22,33 +22,37 @@ namespace EarlyGameTweaks
 
                 while (enumerator.MoveNext())
                 {
-                    Log.Debug(enumerator.Current?.StartTeam);
-                    if (enumerator.Current is not null)
-                    {
-                        int r = Loader.Random.Next(100);
-                        if (enumerator.Current.StartTeam.HasFlag(StartTeam.Other)
-                            || (enumerator.Current.StartTeam.HasFlag(StartTeam.Revived) && !checkRevive)
-                            || (enumerator.Current.StartTeam.HasFlag(StartTeam.Escape) && !checkEscape)
-                            || (!enumerator.Current.StartTeam.HasFlag(StartTeam.Revived) && checkRevive)
-                            || (!enumerator.Current.StartTeam.HasFlag(StartTeam.Escape) && checkEscape)
-                            || r > enumerator.Current.Chance)
-                        {
-                            Log.Debug(
-                                $"Validation check failed | {enumerator.Current.StartTeam} {enumerator.Current.Chance}% || {r}");
-                            continue;
-                        }
+                    var currentRole = enumerator.Current;
+                    if (currentRole is null)
+                        continue;
 
-                        Log.Debug("Returning a role!");
-                        return (CustomRole)enumerator.Current;
+                    Log.Debug(currentRole.StartTeam);
+
+                    int randomChance = Loader.Random.Next(100);
+                    bool isInvalidRole = currentRole.StartTeam.HasFlag(StartTeam.Other)
+                        || (currentRole.StartTeam.HasFlag(StartTeam.Revived) && !checkRevive)
+                        || (currentRole.StartTeam.HasFlag(StartTeam.Escape) && !checkEscape)
+                        || (!currentRole.StartTeam.HasFlag(StartTeam.Revived) && checkRevive)
+                        || (!currentRole.StartTeam.HasFlag(StartTeam.Escape) && checkEscape)
+                        || randomChance > currentRole.Chance;
+
+                    if (isInvalidRole)
+                    {
+                        Log.Debug(
+                            $"Validation check failed | {currentRole.StartTeam} {currentRole.Chance}% || {randomChance}");
+                        continue;
                     }
+
+                    Log.Debug("Returning a role!");
+                    return (CustomRole)currentRole;
                 }
 
                 Log.Debug("Cannot move next");
-
                 return null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Error($"An error occurred in GetCustomRole: {ex.Message}");
                 return null;
             }
         }

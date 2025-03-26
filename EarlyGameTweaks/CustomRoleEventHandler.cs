@@ -17,59 +17,34 @@ namespace EarlyGameTweaks
 
         public void OnRoundStarted()
         {
-            List<ICustomRole>.Enumerator dClassRoles = new();
-            List<ICustomRole>.Enumerator scientistRoles = new();
-            List<ICustomRole>.Enumerator guardRoles = new();
-            List<ICustomRole>.Enumerator scpRoles = new();
+            var roleEnumerators = new Dictionary<StartTeam, List<ICustomRole>.Enumerator>();
+
             Log.Debug($"Found Roles: {Plugin.Roles}");
-            foreach (KeyValuePair<StartTeam, List<ICustomRole>> kvp in Plugin.Roles)
+            foreach (var kvp in Plugin.Roles)
             {
                 Log.Debug($"Setting enumerator for {kvp.Key} - {kvp.Value.Count}");
-                switch (kvp.Key)
-                {
-                    case StartTeam.ClassD:
-                        Log.Debug("Class d funny");
-                        dClassRoles = kvp.Value.GetEnumerator();
-                        break;
-                    case StartTeam.Scientist:
-                        scientistRoles = kvp.Value.GetEnumerator();
-                        break;
-                    case StartTeam.Guard:
-                        guardRoles = kvp.Value.GetEnumerator();
-                        break;
-                    case StartTeam.Scp:
-                        scpRoles = kvp.Value.GetEnumerator();
-                        break;
-                }
+                roleEnumerators[kvp.Key] = kvp.Value.GetEnumerator();
             }
 
-            foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
+            foreach (var player in Player.List)
             {
                 Log.Debug($"Trying to give {player.Nickname} a role | {player.Role.Type}");
-                CustomRole? role = null;
-                switch (player.Role.Type)
+                CustomRole? role = player.Role.Type switch
                 {
-                    case RoleTypeId.FacilityGuard:
-                        role = CustomRoleMethods.GetCustomRole(ref guardRoles);
-                        break;
-                    case RoleTypeId.Scientist:
-                        role = CustomRoleMethods.GetCustomRole(ref scientistRoles);
-                        break;
-                    case RoleTypeId.ClassD:
-                        role = CustomRoleMethods.GetCustomRole(ref dClassRoles);
-                        break;
-                    case { } when player.Role.Side == Side.Scp:
-                        role = CustomRoleMethods.GetCustomRole(ref scpRoles);
-                        break;
-                }
+                    RoleTypeId.FacilityGuard => CustomRoleMethods.GetCustomRole(ref roleEnumerators.GetValueOrDefault(StartTeam.Guard)),
+                    RoleTypeId.Scientist => CustomRoleMethods.GetCustomRole(ref roleEnumerators.GetValueOrDefault(StartTeam.Scientist)),
+                    RoleTypeId.ClassD => CustomRoleMethods.GetCustomRole(ref roleEnumerators.GetValueOrDefault(StartTeam.ClassD)),
+                    _ when player.Role.Side == Side.Scp => CustomRoleMethods.GetCustomRole(ref roleEnumerators.GetValueOrDefault(StartTeam.Scp)),
+                    _ => null
+                };
 
                 role?.AddRole(player);
             }
 
-            guardRoles.Dispose();
-            scientistRoles.Dispose();
-            dClassRoles.Dispose();
-            scpRoles.Dispose();
+            foreach (var enumerator in roleEnumerators.Values)
+            {
+                enumerator.Dispose();
+            }
         }
 
         public void OnRespawningTeam(RespawningTeamEventArgs ev)
@@ -79,64 +54,48 @@ namespace EarlyGameTweaks
                 Log.Warn(
                     $"{nameof(OnRespawningTeam)}: The respawn list is empty ?!? -- {ev.NextKnownTeam} / {ev.MaximumRespawnAmount}");
 
-                foreach (Player player in Player.Get(RoleTypeId.Spectator))
+                foreach (var player in Player.Get(RoleTypeId.Spectator))
                     ev.Players.Add(player);
                 ev.MaximumRespawnAmount = ev.Players.Count;
             }
 
-            List<ICustomRole>.Enumerator roles = new();
-            switch (ev.NextKnownTeam)
+            using var roles = ev.NextKnownTeam switch
             {
-                case (Faction)SpawnableFaction.ChaosWave or (Faction)SpawnableFaction.ChaosMiniWave:
-                    {
-                        if (Plugin.Roles.TryGetValue(StartTeam.Chaos, out List<ICustomRole> role))
-                            roles = role.GetEnumerator();
-                        break;
-                    }
-                case (Faction)SpawnableFaction.NtfWave or (Faction)SpawnableFaction.NtfMiniWave:
-                    {
-                        if (Plugin.Roles.TryGetValue(StartTeam.Ntf, out List<ICustomRole> pluginRole))
-                            roles = pluginRole.GetEnumerator();
-                        break;
-                    }
-            }
+                (Faction)SpawnableFaction.ChaosWave or (Faction)SpawnableFaction.ChaosMiniWave
+                    when Plugin.Roles.TryGetValue(StartTeam.Chaos, out var chaosRoles) => chaosRoles.GetEnumerator(),
+                (Faction)SpawnableFaction.NtfWave or (Faction)SpawnableFaction.NtfMiniWave
+                    when Plugin.Roles.TryGetValue(StartTeam.Ntf, out var ntfRoles) => ntfRoles.GetEnumerator(),
+                _ => new List<ICustomRole>.Enumerator()
+            };
 
-            foreach (Player player in ev.Players)
+            foreach (var player in ev.Players)
             {
-                CustomRole? role = CustomRoleMethods.GetCustomRole(ref roles);
-
+                var role = CustomRoleMethods.GetCustomRole(ref roles);
                 role?.AddRole(player);
             }
-
-            roles.Dispose();
         }
 
         public void FinishingRecall(FinishingRecallEventArgs ev)
         {
             Log.Debug("VVUP Custom Roles: FinishingRecall: Selecting random zombie role.");
-            if (this.Plugin.Roles.ContainsKey(StartTeam.Scp) && ev.Target != null)
+            if (Plugin.Roles.TryGetValue(StartTeam.Scp, out var scpRoles) && ev.Target != null)
             {
-                Log.Debug(string.Format("VVUP Custom Roles: {0}: List count {1}", "FinishingRecall", this.Plugin.Roles[StartTeam.Scp].Count));
-                List<ICustomRole>.Enumerator enumerator = this.Plugin.Roles[StartTeam.Scp].GetEnumerator();
-                CustomRole customRole = CustomRoleMethods.GetCustomRole(ref enumerator, false, true);
-                Log.Debug("VVUP Custom Roles: Got custom role " + ((customRole != null) ? customRole.Name : null));
-                if (customRole != null)
+                Log.Debug($"VVUP Custom Roles: FinishingRecall: List count {scpRoles.Count}");
+                using var enumerator = scpRoles.GetEnumerator();
+                var customRole = CustomRoleMethods.GetCustomRole(ref enumerator, false, true);
+                Log.Debug($"VVUP Custom Roles: Got custom role {customRole?.Name}");
+
+                if (customRole != null && customRole.TrackedPlayers.Count < customRole.SpawnProperties.Limit)
                 {
-                    int count = customRole.TrackedPlayers.Count;
-                    Log.Debug(string.Format("VVUP Custom Roles: Active count for role {0} is {1}", customRole.Name, count));
-                    if ((long)count < (long)((ulong)customRole.SpawnProperties.Limit))
+                    if (Extensions.GetCustomRoles(ev.Target).Count == 0)
                     {
-                        if (Extensions.GetCustomRoles(ev.Target).Count == 0)
-                        {
-                            customRole.AddRole(ev.Target);
-                        }
-                    }
-                    else
-                    {
-                        Log.Debug("VVUP Custom Roles: Role " + customRole.Name + " has reached its spawn limit. Not Spawning");
+                        customRole.AddRole(ev.Target);
                     }
                 }
-                enumerator.Dispose();
+                else
+                {
+                    Log.Debug($"VVUP Custom Roles: Role {customRole?.Name} has reached its spawn limit. Not Spawning");
+                }
             }
         }
     }

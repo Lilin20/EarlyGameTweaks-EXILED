@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
@@ -34,14 +35,12 @@ namespace EarlyGameTweaks.Items
         protected override void SubscribeEvents()
         {
             Player.UsingItemCompleted += OnUsingInjection;
-
             base.SubscribeEvents();
         }
 
         protected override void UnsubscribeEvents()
         {
             Player.UsingItemCompleted -= OnUsingInjection;
-
             base.UnsubscribeEvents();
         }
 
@@ -50,27 +49,15 @@ namespace EarlyGameTweaks.Items
             if (!Check(ev.Player.CurrentItem))
                 return;
 
-            foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
-            {
-                if (player.Role == RoleTypeId.Scp096)
-                {
-                    if (player.Role is not Exiled.API.Features.Roles.Scp096Role scp096)
-                    {
-                        continue;
-                    }
+            var scp096 = Exiled.API.Features.Player.List
+                .FirstOrDefault(player => player.Role == RoleTypeId.Scp096)?
+                .Role as Exiled.API.Features.Roles.Scp096Role;
 
-                    Log.Info(scp096.Targets.ToString());
+            if (scp096 == null || !scp096.HasTarget(ev.Player))
+                return;
 
-                    if ((!scp096.HasTarget(ev.Player)))
-                    {
-                        continue;
-                    }
-
-                    scp096.Calm();
-                    ev.Player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Poisoned));
-                    return;
-                }
-            }
+            scp096.Calm();
+            ev.Player.Hurt(new UniversalDamageHandler(-1f, DeathTranslations.Poisoned));
         }
     }
 }

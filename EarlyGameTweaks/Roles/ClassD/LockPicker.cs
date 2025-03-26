@@ -17,6 +17,7 @@ namespace EarlyGameTweaks.Roles.ClassD
         public override RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
         public int Chance { get; set; } = 20;
         public StartTeam StartTeam { get; set; } = StartTeam.ClassD;
+
         public override List<CustomAbility> CustomAbilities { get; set; } = new()
         {
             new DoorPicking
@@ -25,17 +26,19 @@ namespace EarlyGameTweaks.Roles.ClassD
                 Description = "Allows you to open any door for a short period of time, but limited by some external factors",
             }
         };
+
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 2,
-            RoleSpawnPoints =
-            [
-                new()
+            RoleSpawnPoints = new List<RoleSpawnPoint>
+            {
+                new RoleSpawnPoint
                 {
                     Role = RoleTypeId.ClassD,
                 }
-            ]
+            }
         };
+
         public override List<string> Inventory { get; set; } = new()
         {
             ItemType.Lantern.ToString(),

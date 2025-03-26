@@ -53,6 +53,26 @@ namespace EarlyGameTweaks.Items
             },
         };
 
+        private const float NegativeEffectChance = 0.25f;
+
+        private static readonly Dictionary<EffectType, (int Intensity, float Duration)> NegativeEffects = new()
+        {
+            { EffectType.CardiacArrest, (1, 100f) },
+            { EffectType.AmnesiaItems, (1, 100f) },
+            { EffectType.Bleeding, (1, 100f) },
+            { EffectType.Poisoned, (1, 100f) },
+            { EffectType.Hemorrhage, (1, 100f) },
+            { EffectType.SeveredHands, (1, 100f) },
+        };
+
+        private static readonly Dictionary<EffectType, (int Intensity, float Duration)> PositiveEffects = new()
+        {
+            { EffectType.Invisible, (1, 15f) },
+            { EffectType.MovementBoost, (50, 15f) },
+            { EffectType.Flashed, (1, 1f) },
+            { EffectType.SilentWalk, (10, 15f) },
+        };
+
         protected override void SubscribeEvents()
         {
             Player.UsingItemCompleted += OnUsingLilinsDrug;
@@ -69,35 +89,42 @@ namespace EarlyGameTweaks.Items
 
         private void OnUsingLilinsDrug(UsingItemCompletedEventArgs ev)
         {
-            if (!Check(ev.Player.CurrentItem))
+            if (!Check(ev.Player.CurrentItem) || ev.Item.Type != ItemType.Adrenaline)
                 return;
 
-            if (ev.Item.Type == ItemType.Adrenaline)
-            {
-                ev.IsAllowed = false;
-                ev.Item.Destroy();
-            }
+            ev.IsAllowed = false;
+            ev.Item.Destroy();
 
-            float random = UnityEngine.Random.value;
-            if (random <= 0.25f)
+            if (UnityEngine.Random.value <= NegativeEffectChance)
             {
-                ev.Player.EnableEffect(EffectType.CardiacArrest, 1, 100f, false);
-                ev.Player.EnableEffect(EffectType.AmnesiaItems, 1, 100f, false);
-                ev.Player.EnableEffect(EffectType.Bleeding, 1, 100f, false);
-                ev.Player.EnableEffect(EffectType.Poisoned, 1, 100f, false);
-                ev.Player.EnableEffect(EffectType.Hemorrhage, 1, 100f, false);
-                ev.Player.EnableEffect(EffectType.SeveredHands, 1, 100f, false);
+                ApplyEffects(ev.Player, NegativeEffects);
             }
             else
             {
-                ev.Player.EnableEffect(EffectType.Invisible, 1, 15f, false);
-                ev.Player.EnableEffect(EffectType.MovementBoost, 50, 15f, false);
-                ev.Player.EnableEffect(EffectType.Flashed, 1, 1f, false);
-                ev.Player.EnableEffect(EffectType.SilentWalk, 10, 15f, false);
+                ApplyEffects(ev.Player, PositiveEffects);
                 ev.Player.Health = 25;
                 ev.Player.MaxHealth = 25;
-                Ragdoll ragdoll = Ragdoll.CreateAndSpawn(ev.Player.Role, ev.Player.DisplayNickname, "Es sieht aus wie eine leblose Hülle.", ev.Player.Position, ev.Player.ReferenceHub.PlayerCameraReference.rotation);
+                CreateRagdoll(ev.Player);
             }
+        }
+
+        private static void ApplyEffects(Player player, Dictionary<EffectType, (int Intensity, float Duration)> effects)
+        {
+            foreach (var (effect, (intensity, duration)) in effects)
+            {
+                player.EnableEffect(effect, intensity, duration, false);
+            }
+        }
+
+        private static void CreateRagdoll(Player player)
+        {
+            Ragdoll.CreateAndSpawn(
+                player.Role,
+                player.DisplayNickname,
+                "Es sieht aus wie eine leblose Hülle.",
+                player.Position,
+                player.ReferenceHub.PlayerCameraReference.rotation
+            );
         }
     }
 }

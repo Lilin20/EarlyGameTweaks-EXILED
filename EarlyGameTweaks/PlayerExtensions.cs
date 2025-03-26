@@ -17,25 +17,12 @@ namespace EarlyGameTweaks
 
         public static bool IsStaying(Exiled.API.Features.Player player)
         {
-            if (player.Velocity.x != Vector3.zero.x)
-            {
-                return false;
-            }
-            else if (player.Velocity.y != Vector3.zero.y)
-            {
-                return false;
-            }
-            else if (player.Velocity.z != Vector3.zero.z)
-            {
-                return false;
-            }
-
-            return true;
+            return player.Velocity == Vector3.zero;
         }
 
-        public static void SetIntensityMovementBoost(Exiled.API.Features.Player player, byte itensity)
+        public static void SetIntensityMovementBoost(Exiled.API.Features.Player player, byte intensity)
         {
-            player.ChangeEffectIntensity<MovementBoost>(itensity);
+            player.ChangeEffectIntensity<MovementBoost>(intensity);
         }
     }
 }

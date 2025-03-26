@@ -16,22 +16,26 @@ namespace EarlyGameTweaks.Abilities.Active
         public override string Description { get; set; } = "Allows you to open any door for a short period of time, but limited by some external factors";
         public override float Duration { get; set; } = 15f;
         public override float Cooldown { get; set; } = 90f;
+
         public float TimeToDoorPickMin { get; set; } = 6f;
         public float TimeToDoorPickMax { get; set; } = 12f;
         public float TimeForDoorToBeOpen { get; set; } = 5f;
+
         public string BeforePickingDoorText { get; set; } = "Interact with a door to start to pick it";
         public string PickingDoorText { get; set; } = "Picking door...";
-        public Dictionary<EffectType, byte> EffectsToApply { get; set; } = new Dictionary<EffectType, byte>()
+
+        public Dictionary<EffectType, byte> EffectsToApply { get; set; } = new()
         {
-            {EffectType.Ensnared, 1},
-            {EffectType.Slowness, 255},
+            { EffectType.Ensnared, 1 },
+            { EffectType.Slowness, 255 },
         };
-        public List<Player> PlayersWithPickingDoorAbility = new List<Player>();
+
+        private readonly HashSet<Player> playersWithAbility = new();
 
         protected override void AbilityUsed(Player player)
         {
             player.ShowHint(BeforePickingDoorText, 5f);
-            PlayersWithPickingDoorAbility.Add(player);
+            playersWithAbility.Add(player);
             Exiled.Events.Handlers.Player.InteractingDoor += OnInteractingDoor;
         }
 
@@ -43,43 +47,43 @@ namespace EarlyGameTweaks.Abilities.Active
 
         private void OnInteractingDoor(InteractingDoorEventArgs ev)
         {
-            if (!PlayersWithPickingDoorAbility.Contains(ev.Player))
-                return;
-
-            if (ev.Door.IsOpen)
-                return;
-
-            if (ev.Player.CurrentItem != null)
+            if (!playersWithAbility.Contains(ev.Player) || ev.Door.IsOpen || ev.Player.CurrentItem != null)
                 return;
 
             Log.Debug("VVUP Custom Abilities: Door Picking Ability, processing methods");
             ev.IsAllowed = false;
+
             int randomTime = new Random().Next((int)TimeToDoorPickMin, (int)TimeToDoorPickMax);
             ev.Player.ShowHint(PickingDoorText, randomTime);
+
+            ApplyEffects(ev.Player, randomTime);
+
+            Timing.CallDelayed(randomTime, () => HandleDoorInteraction(ev));
+        }
+
+        private void ApplyEffects(Player player, int duration)
+        {
             foreach (var effect in EffectsToApply)
             {
-                ev.Player.EnableEffect(effect.Key, effect.Value, randomTime);
+                player.EnableEffect(effect.Key, effect.Value, duration);
+            }
+        }
+
+        private void HandleDoorInteraction(InteractingDoorEventArgs ev)
+        {
+            if (ev.Door.Type == DoorType.Scp173Gate)
+            {
+                ev.Player.ShowHint("Diese Tür ist physisch nicht zu öffnen.");
+            }
+            else
+            {
+                Log.Debug($"VVUP Custom Abilities: Opening {ev.Door.Name}");
+                ev.Door.IsOpen = true;
+
+                Timing.CallDelayed(TimeForDoorToBeOpen, () => ev.Door.IsOpen = false);
             }
 
-            Timing.CallDelayed(randomTime, () =>
-            {
-                if (ev.Door.Type == DoorType.Scp173Gate)
-                {
-                    ev.Player.ShowHint("Diese Tür ist physisch nicht zu öffnen.");
-                    PlayersWithPickingDoorAbility.Remove(ev.Player);
-                    return;
-                }
-                else
-                {
-                    Log.Debug($"VVUP Custom Abilities: Opening {ev.Door.Name}");
-                    ev.Door.IsOpen = true;
-                    PlayersWithPickingDoorAbility.Remove(ev.Player);
-                    Timing.CallDelayed(TimeForDoorToBeOpen, () =>
-                    {
-                        ev.Door.IsOpen = false;
-                    });
-                }
-            });
+            playersWithAbility.Remove(ev.Player);
         }
     }
 }

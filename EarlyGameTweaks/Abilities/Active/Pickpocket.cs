@@ -23,34 +23,29 @@ namespace EarlyGameTweaks.Abilities.Active
         protected override void AbilityUsed(Player player)
         {
             if (!Physics.Raycast(player.CameraTransform.position, player.CameraTransform.forward, out RaycastHit raycastHit,
-                       3, ~(1 << 1 | 1 << 13 | 1 << 16 | 1 << 28)))
+                       3, ~(1 << 1 | 1 << 13 | 1 << 16 | 1 << 28)) || raycastHit.collider is null)
                 return;
 
-            if (raycastHit.collider is null)
+            Player robbedPlayer = Player.Get(raycastHit.transform.GetComponentInParent<ReferenceHub>());
+            if (robbedPlayer == null || robbedPlayer.Role.Team == PlayerRoles.Team.SCPs)
                 return;
+
+            if (robbedPlayer.Items.Count == 0)
+            {
+                player.ShowHint("Dieser Spieler hat keine Items im Inventar.");
+                return;
+            }
 
             try
             {
-                Player robbedPlayer = Player.Get(raycastHit.transform.GetComponentInParent<ReferenceHub>());
-                if (robbedPlayer != null)
-                {
-                    if (robbedPlayer.Role.Team != PlayerRoles.Team.SCPs)
-                    {
-                        if (robbedPlayer.Items.Count <= 0)
-                        {
-                            player.ShowHint("Dieser Spieler hat keine Items im Inventar.");
-                        }
-                        Item randomItem = robbedPlayer.Items.ToList().RandomItem();
-                        player.AddItem(randomItem.Type);
-                        
-                        robbedPlayer.RemoveItem(randomItem);
-                        player.ShowHint($"Du hast etwas geklaut...");
-                    }
-                }
+                Item randomItem = robbedPlayer.Items.ToList().RandomItem();
+                player.AddItem(randomItem.Type);
+                robbedPlayer.RemoveItem(randomItem);
+                player.ShowHint("Du hast etwas geklaut...");
             }
             catch (Exception e)
             {
-
+                Log.Error($"Error during Pickpocket ability: {e}");
             }
         }
 

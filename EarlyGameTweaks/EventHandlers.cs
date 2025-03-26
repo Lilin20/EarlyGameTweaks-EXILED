@@ -34,34 +34,22 @@ namespace EarlyGameTweaks
 
         public void OnShot(ShotEventArgs ev)
         {
-            if (ev.Player.ActiveEffects.ToList().Contains(ev.Player.GetEffect(EffectType.Invisible)))
-            {
+            if (ev.Player.ActiveEffects.Contains(ev.Player.GetEffect(EffectType.Invisible)))
                 ev.Player.DisableEffect(EffectType.Invisible);
-            }
 
-            if (!Physics.Raycast(ev.Player.CameraTransform.position, ev.Player.CameraTransform.forward, out RaycastHit raycastHit,
-                   5, ~(1 << 1 | 1 << 13 | 1 << 16 | 1 << 28)))
+            if (!Physics.Raycast(ev.Player.CameraTransform.position, ev.Player.CameraTransform.forward, out RaycastHit hit, 5, ~(1 << 1 | 1 << 13 | 1 << 16 | 1 << 28)))
                 return;
 
-            if (raycastHit.collider is null)
+            if (hit.collider == null || !Exiled.API.Features.Camera.TryGet(hit.collider.gameObject.GetComponentInParent<Scp079Camera>(), out var camera))
                 return;
 
-            if (!Exiled.API.Features.Camera.TryGet(raycastHit.collider.gameObject.GetComponentInParent<Scp079Camera>(), out Exiled.API.Features.Camera hit))
-                return;
-
-            Log.Info(hit.Room);
-            if (hit.IsBeingUsed)
+            Log.Info(camera.Room);
+            if (camera.IsBeingUsed)
             {
-                foreach (Exiled.API.Features.Player playercam in Exiled.API.Features.Player.List)
+                foreach (var player in Exiled.API.Features.Player.List.Where(p => p.Role is Exiled.API.Features.Roles.Scp079Role scp079))
                 {
-                    if (playercam.Role is Exiled.API.Features.Roles.Scp079Role scp079)
-                    {
-                        float random = UnityEngine.Random.value;
-                        if (random <= 0.1f)
-                        {
-                            scp079.LoseSignal(5);
-                        }
-                    }
+                    if (UnityEngine.Random.value <= 0.1f)
+                        ((Exiled.API.Features.Roles.Scp079Role)player.Role).LoseSignal(5);
                 }
             }
         }
@@ -75,207 +63,131 @@ namespace EarlyGameTweaks
         public void OnRageStart(AddingTargetEventArgs ev)
         {
             ev.Target.EnableEffect(EffectType.MovementBoost, 30, 5, false);
-        }
-
-        public void OnWearingGlasses(ChangedStatusEventArgs ev)
-        {
-            if (ev.Scp1344Status == InventorySystem.Items.Usables.Scp1344.Scp1344Status.Active)
-            {
-                ev.Player.EnableEffect(EffectType.FogControl, 5);
-            }
-        }
+        }s
 
         public void OnMapGeneration()
         {
-            //navMeshCoroutine = Timing.RunCoroutine(OptimizeNavMeshCoroutine());
+            // Placeholder for future implementation
         }
 
         public void OnRoundStartSendHint()
         {
-            Room roomPeanut = Room.Get(RoomType.Lcz173);
-            roomPeanut.Color = new Color(1f, 0f, 0f);
+            HighlightRoom(RoomType.Lcz173, Color.red);
+            ConfigureDoor(DoorType.Scp173Gate, DoorLockType.Isolation, allowsScp106: false);
 
-            Door door = Door.Get(DoorType.Scp173Gate);
-            door.DoorLockType = DoorLockType.Isolation;
-            door.AllowsScp106 = false;
+            var allRooms = Room.List.ToArray();
+            var forbiddenRoomTypes = GetForbiddenRoomTypes();
 
-            Room[] allRooms = Room.List.ToArray();
-            List<RoomType> forbiddenRoomTypes = new List<RoomType>
+            foreach (var player in Exiled.API.Features.Player.List.Where(p => p.Role == RoleTypeId.FacilityGuard))
             {
-                RoomType.Hcz079,
-                RoomType.Hcz106,
-                RoomType.HczHid,
-                RoomType.Hcz096,
-                RoomType.Hcz939,
-                RoomType.HczTestRoom,
-                RoomType.Hcz049,
-                RoomType.EzCollapsedTunnel,
-                RoomType.EzGateA,
-                RoomType.EzGateB,
-                RoomType.Lcz173,
-                RoomType.HczTesla,
-                RoomType.EzShelter,
-                RoomType.Pocket,
-            };
-
-            AudioPlayer audioPlayer = AudioPlayer.CreateOrGet($"Radio", onIntialCreation: (p) =>
-            {
-                // This created speaker will be in 3D space.
-                Speaker speaker = p.AddSpeaker("Main", isSpatial: true, minDistance: 1f, maxDistance: 10f);
-
-                speaker.transform.localPosition = new Vector3(62.363f, 995.667f, -38.315f);
-                speaker.transform.position = new Vector3(62.363f, 995.667f, -38.315f);
-            });
-
-            audioPlayer.SetSpeakerPosition("Main", new Vector3(62.363f, 995.667f, -38.315f));
-
-            // As example we will add clip
-            audioPlayer.AddClip("alarmSound", loop: true, volume: 1, destroyOnEnd: false);
-
-            foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
-            {
-                if (player.Role == RoleTypeId.FacilityGuard)
-                {
-                    Room randomRoom = allRooms[UnityEngine.Random.Range(0, allRooms.Length)];
-                    while (forbiddenRoomTypes.Contains(randomRoom.Type))
-                    {
-                        randomRoom = allRooms[UnityEngine.Random.Range(0, allRooms.Length)];
-                    }
-                    Log.Info($"Guard {player.CustomName} spawned in {randomRoom.Type}");
-                    player.Teleport(randomRoom.Position + Vector3.up);
-                }
+                var randomRoom = GetRandomRoom(allRooms, forbiddenRoomTypes);
+                Log.Info($"Guard {player.CustomName} spawned in {randomRoom.Type}");
+                player.Teleport(randomRoom.Position + Vector3.up);
             }
+
+            SetupAudioPlayer();
         }
 
         public void OnPickupArmor(PickingUpItemEventArgs ev)
         {
-            if (ev.Pickup.Category == ItemCategory.Armor)
-            {
-                foreach (Exiled.API.Features.Items.Item item in ev.Player.Items)
-                {
-                    if (item.IsArmor)
-                    {
-                        if (CustomItem.Get(900).Check(item))
-                        {
-                            ev.IsAllowed = false;
-                            ev.Pickup.Destroy();
-                            ev.Player.Heal(50);
-                        }
-                    }
-                }
-            }
-            else
-            {
+            if (ev.Pickup.Category != ItemCategory.Armor)
                 return;
-            }
-        }
 
-        public void OnLunging(LungingEventArgs ev)
-        {
-            if (ev.Player.Role is Scp939Role scp)
+            if (ev.Player.Items.Any(item => item.IsArmor && CustomItem.Get(900).Check(item)))
             {
-               
+                ev.IsAllowed = false;
+                ev.Pickup.Destroy();
+                ev.Player.Heal(50);
             }
         }
 
         public void OnSettingValueReceived(ReferenceHub hub, ServerSpecificSettingBase settingBase)
         {
-            if (!Exiled.API.Features.Player.TryGet(hub, out Exiled.API.Features.Player player))
+            if (!Exiled.API.Features.Player.TryGet(hub, out var player) || hub == null || player == null)
                 return;
 
-            if (hub == null)
+            if (settingBase is SSKeybindSetting keybindSetting && keybindSetting.SyncIsPressed)
+                HandleKeybindSetting(player, keybindSetting);
+        }
+
+        private void HandleKeybindSetting(Exiled.API.Features.Player player, SSKeybindSetting keybindSetting)
+        {
+            if (!ActiveAbility.AllActiveAbilities.TryGetValue(player, out var abilities))
                 return;
 
-            if (player == null)
-                return;
+            string response = string.Empty;
+            var ability = abilities.FirstOrDefault(a => a.GetType() == GetAbilityType(keybindSetting.SettingId));
 
-            if (settingBase is SSKeybindSetting ssKeybindSetting && ssKeybindSetting.SyncIsPressed)
+            if (ability != null && ability.CanUseAbility(player, out response))
             {
-                if ((ssKeybindSetting.SettingId == 10003 || ssKeybindSetting.SettingId == 10004 || ssKeybindSetting.SettingId == 10005 || ssKeybindSetting.SettingId == 10006 || ssKeybindSetting.SettingId == 10007 || ssKeybindSetting.SettingId == 10008) && ActiveAbility.AllActiveAbilities.TryGetValue(player, out var abilities))
-                {
-                    string response = String.Empty;
-                    if (ssKeybindSetting.SettingId == 10003)
-                    {
-                        var doorPickingAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(DoorPicking));
-                        if (doorPickingAbility != null && doorPickingAbility.CanUseAbility(player, out response))
-                        {
-                            doorPickingAbility.SelectAbility(player);
-                            doorPickingAbility.UseAbility(player);
-                            player.ShowHint("Activated Door Picking, Interact with the door you want to pick.");
-                        }
-                        else
-                        {
-                            player.ShowHint(response);
-                        }
-                    }
-                    else if (ssKeybindSetting.SettingId == 10004)
-                    {
-                        var blackoutAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(ZoneBlackout));
-                        if (blackoutAbility != null && blackoutAbility.CanUseAbility(player, out response))
-                        {
-                            blackoutAbility.SelectAbility(player);
-                            blackoutAbility.UseAbility(player);
-                        }
-                        else
-                        {
-                            player.ShowHint(response);
-                        }
-                    }
-                    else if (ssKeybindSetting.SettingId == 10005)
-                    {
-                        var chargeAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(ChargeAbility));
-                        if (chargeAbility != null && chargeAbility.CanUseAbility(player, out response))
-                        {
-                            chargeAbility.SelectAbility(player);
-                            chargeAbility.UseAbility(player);
-                        }
-                        else
-                        {
-                            player.ShowHint(response);
-                        }
-                    }
-                    else if (ssKeybindSetting.SettingId == 10006)
-                    {
-                        var furyAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(BerserkerFury));
-                        if (furyAbility != null && furyAbility.CanUseAbility(player, out response))
-                        {
-                            furyAbility.SelectAbility(player);
-                            furyAbility.UseAbility(player);
-                        }
-                        else
-                        {
-                            player.ShowHint(response);
-                        }
-                    }
-                    else if (ssKeybindSetting.SettingId == 10007)
-                    {
-                        var zombieHealingAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(HealingMist));
-                        if (zombieHealingAbility != null && zombieHealingAbility.CanUseAbility(player, out response))
-                        {
-                            zombieHealingAbility.SelectAbility(player);
-                            zombieHealingAbility.UseAbility(player);
-                        }
-                        else
-                        {
-                            player.ShowHint(response);
-                        }
-                    }
-                    else if (ssKeybindSetting.SettingId == 10008)
-                    {
-                        var pickpocketAbility = abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(Pickpocket));
-                        if (pickpocketAbility != null && pickpocketAbility.CanUseAbility(player, out response))
-                        {
-                            pickpocketAbility.SelectAbility(player);
-                            pickpocketAbility.UseAbility(player);
-                        }
-                        else
-                        {
-                            player.ShowHint(response);
-                        }
-                    }
-                }
+                ability.SelectAbility(player);
+                ability.UseAbility(player);
+                player.ShowHint(GetAbilityHint(keybindSetting.SettingId));
+            }
+            else
+            {
+                player.ShowHint(response);
             }
         }
 
+        private Type GetAbilityType(int settingId) => settingId switch
+        {
+            10003 => typeof(DoorPicking),
+            10004 => typeof(ZoneBlackout),
+            10005 => typeof(ChargeAbility),
+            10006 => typeof(BerserkerFury),
+            10007 => typeof(HealingMist),
+            10008 => typeof(Pickpocket),
+            _ => null
+        };
+
+        private string GetAbilityHint(int settingId) => settingId switch
+        {
+            10003 => "Activated Door Picking, Interact with the door you want to pick.",
+            _ => string.Empty
+        };
+
+        private void HighlightRoom(RoomType roomType, Color color)
+        {
+            var room = Room.Get(roomType);
+            room.Color = color;
+        }
+
+        private void ConfigureDoor(DoorType doorType, DoorLockType lockType, bool allowsScp106)
+        {
+            var door = Door.Get(doorType);
+            door.DoorLockType = lockType;
+            door.AllowsScp106 = allowsScp106;
+        }
+
+        private Room GetRandomRoom(Room[] allRooms, List<RoomType> forbiddenRoomTypes)
+        {
+            Room randomRoom;
+            do
+            {
+                randomRoom = allRooms[UnityEngine.Random.Range(0, allRooms.Length)];
+            } while (forbiddenRoomTypes.Contains(randomRoom.Type));
+
+            return randomRoom;
+        }
+
+        private List<RoomType> GetForbiddenRoomTypes() => new()
+        {
+            RoomType.Hcz079, RoomType.Hcz106, RoomType.HczHid, RoomType.Hcz096, RoomType.Hcz939,
+            RoomType.HczTestRoom, RoomType.Hcz049, RoomType.EzCollapsedTunnel, RoomType.EzGateA,
+            RoomType.EzGateB, RoomType.Lcz173, RoomType.HczTesla, RoomType.EzShelter, RoomType.Pocket
+        };
+
+        private void SetupAudioPlayer()
+        {
+            var audioPlayer = AudioPlayer.CreateOrGet("Radio", p =>
+            {
+                var speaker = p.AddSpeaker("Main", isSpatial: true, minDistance: 1f, maxDistance: 10f);
+                speaker.transform.position = new Vector3(62.363f, 995.667f, -38.315f);
+            });
+
+            audioPlayer.SetSpeakerPosition("Main", new Vector3(62.363f, 995.667f, -38.315f));
+            audioPlayer.AddClip("alarmSound", loop: true, volume: 1, destroyOnEnd: false);
+        }
     }
 }

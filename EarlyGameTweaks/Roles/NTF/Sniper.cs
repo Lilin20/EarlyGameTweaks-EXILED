@@ -13,33 +13,32 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
     public class Sniper : CustomRole, ICustomRole
     {
         public override uint Id { get; set; } = 302;
-        public override int MaxHealth { get; set; } = 100;
         public override string Name { get; set; } = "NTF - Scharfschütze";
         public override string Description { get; set; } = "Speziell ausgerüstet für den Fernkampf.";
         public override string CustomInfo { get; set; } = "NTF - Scharfschütze";
         public override RoleTypeId Role { get; set; } = RoleTypeId.NtfCaptain;
-        public int Chance { get; set; } = 25;
+        public override int MaxHealth { get; set; } = 100;
         public override bool DisplayCustomItemMessages { get; set; } = false;
+
+        public int Chance { get; set; } = 25;
         public StartTeam StartTeam { get; set; } = StartTeam.Ntf;
+
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
-            RoleSpawnPoints =
-            [
-                new()
-                {
-                    Role = RoleTypeId.NtfCaptain,
-                }
-            ]
+            RoleSpawnPoints = new List<RoleSpawnPoint>
+            {
+                new() { Role = RoleTypeId.NtfCaptain }
+            }
         };
 
-        public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
+        public override List<CustomAbility> CustomAbilities { get; set; } = new()
         {
-            new RestrictedItems()
+            new RestrictedItems
             {
                 Name = "Restricted Items [Passive]",
                 Description = "Handles restricted items",
-                RestrictedItemList =
+                RestrictedItemList = new List<ItemType>
                 {
                     ItemType.GunAK,
                     ItemType.GunCOM18,
@@ -55,14 +54,13 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
                 RestrictPickingUpItems = true,
                 RestrictDroppingItems = false,
             },
-
-            new EffectEnabler()
+            new EffectEnabler
             {
                 Name = "Adleraugen [Passive]",
                 Description = "Du kannst weiter sehen als andere Spieler.",
-                EffectsToApply =
+                EffectsToApply = new Dictionary<EffectType, byte>
                 {
-                    {EffectType.FogControl, 255}
+                    { EffectType.FogControl, 255 }
                 }
             }
         };

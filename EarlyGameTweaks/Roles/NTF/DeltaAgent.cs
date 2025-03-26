@@ -10,33 +10,34 @@ namespace EarlyGameTweaks.Roles.NTF
     public class DeltaAgent : CustomRole, ICustomRole
     {
         public override uint Id { get; set; } = 300;
-        public override int MaxHealth { get; set; } = 200;
         public override string Name { get; set; } = "NTF - Zeta 9 Unit";
         public override string Description { get; set; } = "Spezialisiert auf Einsätze in Tunneln und instabilen Strukturen. Deine Aufgabe: SCPs sichern, Gefahren neutralisieren – im Dunkeln.";
         public override string CustomInfo { get; set; } = "NTF - Zeta 9 Unit";
         public override RoleTypeId Role { get; set; } = RoleTypeId.NtfCaptain;
+        public override int MaxHealth { get; set; } = 200;
         public override bool DisplayCustomItemMessages { get; set; } = false;
+
         public int Chance { get; set; } = 15;
         public StartTeam StartTeam { get; set; } = StartTeam.Ntf;
-        public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
+
+        public override List<CustomAbility> CustomAbilities { get; set; } = new()
         {
-            new ZoneBlackout()
+            new ZoneBlackout
             {
                 Name = "Zone Blackout [Active]",
                 Description = "Schaltet in der Zone in der du dich befindest die Lichter aus."
             }
         };
+
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
-            RoleSpawnPoints =
-            [
-                new()
-                {
-                    Role = RoleTypeId.NtfCaptain,
-                }
-            ]
+            RoleSpawnPoints = new List<RoleSpawnPoint>
+            {
+                new RoleSpawnPoint { Role = RoleTypeId.NtfCaptain }
+            }
         };
+
         public override List<string> Inventory { get; set; } = new()
         {
             ItemType.KeycardMTFCaptain.ToString(),

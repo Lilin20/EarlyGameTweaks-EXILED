@@ -28,46 +28,18 @@ namespace EarlyGameTweaks.Roles.NTF
         public override string CustomInfo { get; set; } = "Facility Guard - Special Agent";
         public override RoleTypeId Role { get; set; } = RoleTypeId.FacilityGuard;
         public int Chance { get; set; } = 25;
-        public CoroutineHandle _coroutineHandle;
+        private CoroutineHandle _coroutineHandle;
         public override bool DisplayCustomItemMessages { get; set; } = false;
         public StartTeam StartTeam { get; set; } = StartTeam.Guard;
+
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new()
-                {
-                    Chance = 100,
-                    Location = SpawnLocationType.InsideHczArmory,
-                }
+                new() { Chance = 100, Location = SpawnLocationType.InsideHczArmory }
             },
         };
-
-        protected override void SubscribeEvents()
-        {
-            Exiled.Events.Handlers.Player.Spawned += OnSpawn;
-            base.SubscribeEvents();
-        }
-
-        protected override void UnsubscribeEvents()
-        {
-            Exiled.Events.Handlers.Player.Spawned -= OnSpawn;
-            base.UnsubscribeEvents();
-        }
-
-        public void OnSpawn(SpawnedEventArgs ev)
-        {
-            Timing.CallDelayed(1f, () =>
-            {
-                if (!Check(ev.Player))
-                {
-                    return;
-                }
-
-                _coroutineHandle = Timing.RunCoroutine(specialAgentCoroutine(ev.Player));
-            });
-        }
 
         public override List<CustomAbility> CustomAbilities { get; set; } = new()
         {
@@ -75,9 +47,9 @@ namespace EarlyGameTweaks.Roles.NTF
             {
                 Name = "Effect Enabler [Passive]",
                 Description = "Gibt diverse Effekte.",
-                EffectsToApply = new Dictionary<Exiled.API.Enums.EffectType, byte>()
+                EffectsToApply = new Dictionary<EffectType, byte>
                 {
-                    {EffectType.SilentWalk, 8}
+                    { EffectType.SilentWalk, 8 }
                 }
             }
         };
@@ -92,28 +64,47 @@ namespace EarlyGameTweaks.Roles.NTF
             ItemType.Ammo9x19.ToString(),
         };
 
-        public IEnumerator<float> specialAgentCoroutine(Player player)
+        protected override void SubscribeEvents()
         {
-            // PLAYER IS ALWAYS WALKING
-            for (; ; )
+            Exiled.Events.Handlers.Player.Spawned += OnSpawn;
+            base.SubscribeEvents();
+        }
+
+        protected override void UnsubscribeEvents()
+        {
+            Exiled.Events.Handlers.Player.Spawned -= OnSpawn;
+            base.UnsubscribeEvents();
+        }
+
+        private void OnSpawn(SpawnedEventArgs ev)
+        {
+            if (!Check(ev.Player)) return;
+
+            Timing.CallDelayed(1f, () =>
             {
-                Vector3 oldPos = player.Position;
-                yield return Timing.WaitForSeconds(1f);
-                if (player.Role is FpcRole fpcRole)
-                {
-                    if (oldPos == player.Position)
-                    {
-                        player.EnableEffect(EffectType.Invisible);
-                    }
-                    else if(oldPos != player.Position)
-                    {
-                        player.DisableEffect(EffectType.Invisible);
-                    }
-                }
+                _coroutineHandle = Timing.RunCoroutine(SpecialAgentCoroutine(ev.Player));
+            });
+        }
+
+        private IEnumerator<float> SpecialAgentCoroutine(Player player)
+        {
+            while (true)
+            {
                 if (player.Role == RoleTypeId.Spectator)
                 {
                     Timing.KillCoroutines(_coroutineHandle);
                     yield break;
+                }
+
+                Vector3 oldPos = player.Position;
+                yield return Timing.WaitForSeconds(1f);
+
+                if (player.Role is FpcRole)
+                {
+                    if (oldPos == player.Position)
+                        player.EnableEffect(EffectType.Invisible);
+                    else
+                        player.DisableEffect(EffectType.Invisible);
                 }
             }
         }

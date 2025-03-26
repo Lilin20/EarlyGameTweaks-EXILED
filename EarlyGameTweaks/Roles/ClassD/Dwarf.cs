@@ -16,21 +16,23 @@ namespace EarlyGameTweaks.Roles.ClassD
         public override string Description { get; set; } = "Du bist kleiner - schwerer zu treffen aber dafür weniger HP.";
         public override string CustomInfo { get; set; } = "Class-D - Dwarf";
         public override RoleTypeId Role { get; set; } = RoleTypeId.ClassD;
+
         public int Chance { get; set; } = 15;
         public StartTeam StartTeam { get; set; } = StartTeam.ClassD;
-        public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>
+
+        public override List<CustomAbility> CustomAbilities { get; set; } = new()
         {
-            new ScaleAbility()
+            new ScaleAbility
             {
                 Name = "Dwarf [Passive]",
                 Description = "Macht dich kleiner und schneller aber dafür weniger HP.",
                 ScaleForPlayers = new Vector3(0.65f, 0.65f, 0.65f),
             },
-            new RestrictedItems()
+            new RestrictedItems
             {
                 Name = "Restricted Items [Passive]",
                 Description = "Handles restricted items",
-                RestrictedItemList =
+                RestrictedItemList = new List<ItemType>
                 {
                     ItemType.GunAK,
                     ItemType.GunE11SR,
@@ -44,17 +46,19 @@ namespace EarlyGameTweaks.Roles.ClassD
                 RestrictDroppingItems = false,
             }
         };
+
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
-            RoleSpawnPoints =
-            [
-                new()
+            RoleSpawnPoints = new List<RoleSpawnPoint>
+            {
+                new RoleSpawnPoint
                 {
                     Role = RoleTypeId.ClassD,
                 }
-            ]
+            }
         };
+
         public override List<string> Inventory { get; set; } = new()
         {
             ItemType.Lantern.ToString(),

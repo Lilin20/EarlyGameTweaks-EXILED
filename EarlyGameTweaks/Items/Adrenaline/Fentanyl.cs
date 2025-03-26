@@ -23,50 +23,18 @@ namespace EarlyGameTweaks.Items
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 25,
-            LockerSpawnPoints = new List<LockerSpawnPoint>
-            {
-                new()
-                {
-                    Chance = 30,
-                    Zone = ZoneType.LightContainment,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                },
-                new()
-                {
-                    Chance = 30,
-                    Zone = ZoneType.HeavyContainment,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                },
-                new()
-                {
-                    Chance = 30,
-                    Zone = ZoneType.Entrance,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                },
-                new()
-                {
-                    Chance = 100,
-                    Zone = ZoneType.Surface,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                }
-            }
+            LockerSpawnPoints = GetLockerSpawnPoints()
         };
 
         protected override void SubscribeEvents()
         {
             Player.UsingItemCompleted += OnUsingInjection;
-
             base.SubscribeEvents();
         }
 
         protected override void UnsubscribeEvents()
         {
             Player.UsingItemCompleted -= OnUsingInjection;
-
             base.UnsubscribeEvents();
         }
 
@@ -78,11 +46,7 @@ namespace EarlyGameTweaks.Items
             float random = UnityEngine.Random.value;
             if (random <= 0.33f)
             {
-                ev.Player.Role.Set(PlayerRoles.RoleTypeId.Scp0492, PlayerRoles.RoleSpawnFlags.None);
-                ev.Player.MaxHealth = 100;
-                ev.Player.Health = 100;
-                ev.Player.EnableEffect(EffectType.Slowness, 200);
-                ev.Player.EnableEffect(EffectType.Concussed, 60);
+                ApplyZombieTransformation(ev.Player);
             }
             else if (random <= 0.66f)
             {
@@ -90,11 +54,33 @@ namespace EarlyGameTweaks.Items
             }
             else
             {
-                ev.Player.EnableEffect(EffectType.Slowness, 200);
-                ev.Player.EnableEffect(EffectType.DamageReduction, 150);
-                ev.Player.EnableEffect(EffectType.AmnesiaItems, 100);
-                ev.Player.EnableEffect(EffectType.Blinded, 90);
+                ApplyNegativeEffects(ev.Player);
             }
+        }
+
+        private static List<LockerSpawnPoint> GetLockerSpawnPoints() => new()
+        {
+            new() { Chance = 30, Zone = ZoneType.LightContainment, UseChamber = false, Type = LockerType.Misc },
+            new() { Chance = 30, Zone = ZoneType.HeavyContainment, UseChamber = false, Type = LockerType.Misc },
+            new() { Chance = 30, Zone = ZoneType.Entrance, UseChamber = false, Type = LockerType.Misc },
+            new() { Chance = 100, Zone = ZoneType.Surface, UseChamber = false, Type = LockerType.Misc }
+        };
+
+        private static void ApplyZombieTransformation(Player player)
+        {
+            player.Role.Set(PlayerRoles.RoleTypeId.Scp0492, PlayerRoles.RoleSpawnFlags.None);
+            player.MaxHealth = 100;
+            player.Health = 100;
+            player.EnableEffect(EffectType.Slowness, 200);
+            player.EnableEffect(EffectType.Concussed, 60);
+        }
+
+        private static void ApplyNegativeEffects(Player player)
+        {
+            player.EnableEffect(EffectType.Slowness, 200);
+            player.EnableEffect(EffectType.DamageReduction, 150);
+            player.EnableEffect(EffectType.AmnesiaItems, 100);
+            player.EnableEffect(EffectType.Blinded, 90);
         }
     }
 }
