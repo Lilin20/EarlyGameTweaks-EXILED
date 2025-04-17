@@ -38,6 +38,7 @@ namespace EarlyGameTweaks
         public ZombieJuggernaut zjc = new ZombieJuggernaut();
         public MedicZombie zmc = new MedicZombie();
         public Thief thiefc = new Thief();
+        public DwarfZombie dwz = new DwarfZombie();
 
         public List<ExplosionGrenadeProjectile> GrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
         public List<ExplosionGrenadeProjectile> AlertGrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
@@ -56,6 +57,7 @@ namespace EarlyGameTweaks
             Exiled.Events.Handlers.Player.PickingUpItem += EventHandlers.OnPickupArmor;
 
             Exiled.Events.Handlers.Scp096.AddingTarget += EventHandlers.OnRageStart;
+            Exiled.Events.Handlers.Player.Hurting += EventHandlers.OnSCPVoid;
 
             //Exiled.Events.Handlers.Scp1344.ChangedStatus += EventHandlers.OnWearingGlasses;
 
@@ -82,6 +84,7 @@ namespace EarlyGameTweaks
             zjc.Register();
             zmc.Register();
             thiefc.Register();
+            dwz.Register();
 
             foreach (CustomRole role in CustomRole.Registered)
             {
@@ -118,6 +121,8 @@ namespace EarlyGameTweaks
             Exiled.Events.Handlers.Server.RespawningTeam += CustomRoleEventHandler.OnRespawningTeam;
             Exiled.Events.Handlers.Map.Generated += EventHandlers.OnMapGeneration;
             Exiled.Events.Handlers.Scp049.FinishingRecall += CustomRoleEventHandler.FinishingRecall;
+            //Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStartHintSetup;
+
             CustomAbility.RegisterAbilities();
 
             base.OnEnabled();
@@ -130,6 +135,7 @@ namespace EarlyGameTweaks
             Exiled.Events.Handlers.Player.PickingUpItem -= EventHandlers.OnPickupArmor;
 
             Exiled.Events.Handlers.Scp096.AddingTarget -= EventHandlers.OnRageStart;
+            Exiled.Events.Handlers.Player.Hurting -= EventHandlers.OnSCPVoid;
 
             ServerSpecificSettingsSync.ServerOnSettingValueReceived -= EventHandlers.OnSettingValueReceived;
 
@@ -149,6 +155,7 @@ namespace EarlyGameTweaks
             zjc.Unregister();
             zmc.Unregister();
             thiefc.Unregister();
+            dwz.Unregister();
 
             //harmony.UnpatchAll();
             CustomAbility.UnregisterAbilities();
@@ -158,6 +165,7 @@ namespace EarlyGameTweaks
             Exiled.Events.Handlers.Server.RespawningTeam -= CustomRoleEventHandler.OnRespawningTeam;
             Exiled.Events.Handlers.Map.Generated -= EventHandlers.OnMapGeneration;
             Exiled.Events.Handlers.Scp049.FinishingRecall -= CustomRoleEventHandler.FinishingRecall;
+            //Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStartHintSetup;
 
             EventHandlers = null;
             Instance = null;

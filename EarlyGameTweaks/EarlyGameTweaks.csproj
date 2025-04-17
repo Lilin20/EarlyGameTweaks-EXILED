@@ -62,17 +62,11 @@
     <Reference Include="AudioPlayerApi">
       <HintPath>..\..\Games\AudioPlayerApi.dll</HintPath>
     </Reference>
-    <Reference Include="CustomizableUIMeow %281%29">
-      <HintPath>..\..\..\Downloads\CustomizableUIMeow (1).dll</HintPath>
+    <Reference Include="HintServiceMeow-Exiled">
+      <HintPath>..\..\..\Downloads\HintServiceMeow-Exiled.dll</HintPath>
     </Reference>
     <Reference Include="MapEditorReborn">
       <HintPath>..\..\..\Downloads\MapEditorReborn.dll</HintPath>
-    </Reference>
-    <Reference Include="MapEditorReborn %281%29">
-      <HintPath>..\..\..\Downloads\MapEditorReborn (1).dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror">
-      <HintPath>E:\EXILED Projects\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="NVorbis">
       <HintPath>..\..\Games\NVorbis.dll</HintPath>
@@ -95,8 +89,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Games\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
-    <Reference Include="System.ValueTuple" />
     <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="System.ValueTuple" Version="4.6.1" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -115,6 +109,10 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>E:\EXILED Projects\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Verweise\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
       <HintPath>E:\EXILED Projects\UnityEngine.Physics2DModule.dll</HintPath>
     </Reference>
@@ -127,6 +125,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abilities\Active\BombSuicide.cs" />
     <Compile Include="Abilities\Active\BerserkerFury.cs" />
     <Compile Include="Abilities\Active\ChargeAbility.cs" />
     <Compile Include="Abilities\Active\Pickpocket.cs" />
@@ -146,6 +145,7 @@
     <Compile Include="Items\Adrenaline\TestAdrenaline.cs" />
     <Compile Include="Items\Grenades\SmokeGrenade.cs" />
     <Compile Include="Items\Grenades\TestDummy.cs" />
+    <Compile Include="Items\Grenades\TestGrenade.cs" />
     <Compile Include="Items\Medkits\DefiNtf.cs" />
     <Compile Include="Items\Medkits\DefiChaos.cs" />
     <Compile Include="Items\MPs\MedicGun.cs" />
@@ -158,9 +158,12 @@
     <Compile Include="EarlyGameTweaks.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="Items\Pistols\GrenadeLauncher.cs" />
     <Compile Include="Items\Pistols\TestDummyPistol.cs" />
     <Compile Include="Items\Rifles\Sniper.cs" />
+    <Compile Include="Items\SCPs\ScrambleGoggles.cs" />
     <Compile Include="Items\SCPs\GogglesItem.cs" />
+    <Compile Include="Items\SCPs\Gasmask.cs" />
     <Compile Include="Items\Shotguns\BreachShotgun.cs" />
     <Compile Include="Items\Rifles\HumeBreaker.cs" />
     <Compile Include="Items\SCPs\NightVisionGoggles.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="Roles\NTF\DeltaAgent.cs" />
     <Compile Include="Roles\NTF\SpecialAgentGuard.cs" />
     <Compile Include="Roles\Scientist\Pacifist.cs" />
+    <Compile Include="Roles\SCP\DwarfZombie.cs" />
     <Compile Include="Roles\SCP\MedicZombie.cs" />
     <Compile Include="Roles\SCP\ZombieJuggernaut.cs" />
     <Compile Include="RoomManager.cs" />

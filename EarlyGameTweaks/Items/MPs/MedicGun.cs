@@ -80,7 +80,7 @@ namespace EarlyGameTweaks.Items
             }
             else if (ev.Target.Role == RoleTypeId.Scp0492)
             {
-                ev.Target.HumeShield += 10;
+                ev.Target.HumeShield += 20;
 
                 if (ev.Target.HumeShield >= 300)
                 {

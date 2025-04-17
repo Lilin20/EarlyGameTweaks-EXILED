@@ -50,7 +50,7 @@ namespace EarlyGameTweaks.Abilities.Active
             }
             catch (Exception e)
             {
-
+                Log.Debug(e);
             }
         }
 

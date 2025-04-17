@@ -15,15 +15,15 @@ namespace EarlyGameTweaks.Items
     [CustomItem(ItemType.GrenadeHE)]
     public class TetherGrenade : CustomGrenade
     {
-        public override bool ExplodeOnCollision { get; set; } = true;
-        public override float FuseTime { get; set; } = 900f;
+        public override bool ExplodeOnCollision { get; set; } = false;
+        public override float FuseTime { get; set; } = 3f;
         public override uint Id { get; set; } = 202;
         public override string Name { get; set; } = "Tether Granate";
         public override string Description { get; set; } = "Explodiert beim aufprall. Hält Gegner im Wirkungsbereich fest.";
         public override float Weight { get; set; } = 1.75f;
         public List<ExplosionGrenadeProjectile> GrenadeProjectiles { get; set; } = new List<ExplosionGrenadeProjectile>();
         public List<Exiled.API.Features.Player> PlayersWithGodMode = new List<Exiled.API.Features.Player>();
-        public float maxDistance = 5f;
+        public float maxDistance = 4f;
         public CoroutineHandle _coroutine;
         public override SpawnProperties SpawnProperties { get; set; } = new()
         {

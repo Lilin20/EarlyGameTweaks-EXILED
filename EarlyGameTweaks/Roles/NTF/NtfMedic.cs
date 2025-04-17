@@ -13,7 +13,7 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
         public override string Name { get; set; } = "NTF - Trauma Team";
         public override string Description { get; set; } = "Speziell ausgerüstet für den medizinischen Support.";
         public override string CustomInfo { get; set; } = "NTF - Trauma Team";
-        public override RoleTypeId Role { get; set; } = RoleTypeId.NtfPrivate;
+        public override RoleTypeId Role { get; set; } = RoleTypeId.NtfSpecialist;
         public int Chance { get; set; } = 50;
         public override bool DisplayCustomItemMessages { get; set; } = false;
         public StartTeam StartTeam { get; set; } = StartTeam.Ntf;
@@ -24,13 +24,13 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
             [
                 new()
                 {
-                    Role = RoleTypeId.NtfPrivate,
+                    Role = RoleTypeId.NtfSpecialist,
                 }
             ]
         };
         public override List<string> Inventory { get; set; } = new()
         {
-            ItemType.KeycardMTFPrivate.ToString(),
+            ItemType.KeycardMTFOperative.ToString(),
             ItemType.GunFSP9.ToString(),
             ItemType.Medkit.ToString(),
             ItemType.ArmorLight.ToString(),

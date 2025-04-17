@@ -15,7 +15,7 @@ namespace EarlyGameTweaks.Roles.SCP
 {
     public class MedicZombie : CustomRole, ICustomRole
     {
-        public int Chance { get; set; } = 20;
+        public int Chance { get; set; } = 25;
         public override uint Id { get; set; } = 501;
         public override int MaxHealth { get; set; } = 450;
         public override string Name { get; set; } = "<color=#FF0000>SCP-049-2 - Medic</color>";

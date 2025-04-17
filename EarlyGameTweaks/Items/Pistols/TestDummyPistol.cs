@@ -19,24 +19,39 @@ namespace EarlyGameTweaks.Items
     public class TestDummyPistol : CustomWeapon
     {
         public override uint Id { get; set; } = 9000;
-        public override string Name { get; set; } = "test";
-        public override string Description { get; set; } = "test";
-        public override float Damage { get; set; } = 1;
+        public override string Name { get; set; } = "[REDACTED]";
+        public override string Description { get; set; } = "[REDACTED]";
+        public override float Damage { get; set; } = 30;
         public override byte ClipSize { get; set; } = 50;
         public override float Weight { get; set; } = 0.1f;
         public Transform handBone;
         private Queue<Primitive> spawnedPrimitives = new Queue<Primitive>();
-        public override SpawnProperties SpawnProperties { get; set; }
+        public override SpawnProperties SpawnProperties { get; set; } = new()
+        {
+            Limit = 1,
+            DynamicSpawnPoints = new List<DynamicSpawnPoint>
+            {
+                new()
+                {
+                    Chance = 25,
+                    Location = SpawnLocationType.Inside049Armory,
+                }
+            },
+        };
 
         protected override void SubscribeEvents()
         {
+            Exiled.Events.Handlers.Player.Dying += VaporizeOnKill;
             base.SubscribeEvents();
         }
 
         protected override void UnsubscribeEvents()
         {
+            Exiled.Events.Handlers.Player.Dying -= VaporizeOnKill;
             base.UnsubscribeEvents();
         }
+
+
         protected override void OnShooting(ShootingEventArgs ev)
         {
             
@@ -52,11 +67,24 @@ namespace EarlyGameTweaks.Items
                 Animator animator = ev.Player.GameObject.GetComponentInChildren<Animator>();
                 Transform handBone = animator.GetBoneTransform(HumanBodyBones.RightHand);
 
-                SpawnPrimitivesAlongPath(handBone.position, raycastHit.point);
-
-                SpawnElectricEffect(raycastHit.point);
+                SpawnBeam(handBone.position, raycastHit.point);
+                SpawnSpiralAroundBeam(handBone.position, raycastHit.point);
             }
         }
+
+        public void VaporizeOnKill(DyingEventArgs ev)
+        {
+            if (ev.Player == null) return;
+            if (ev.Attacker == null) return;
+
+            if (Check(ev.Attacker.CurrentItem))
+            {
+                if (ev.DamageHandler.Type == DamageType.Crossvec) {
+                    ev.Player.Vaporize();
+                }
+            }
+        }
+
         private IEnumerator<float> FadeOutAndDestroy(Primitive primitive, float duration)
         {
             float elapsed = 0f;
@@ -66,12 +94,9 @@ namespace EarlyGameTweaks.Items
             {
                 elapsed += Time.deltaTime;
 
-                // Leichtes Flackern, damit die Blitze nicht statisch wirken
-                float flicker = Mathf.PingPong(elapsed * 15f, 0.3f);
-
-                // Farbverlauf von Blau → Weiß mit Transparenz für einen realistischen Blitz-Effekt
+                // Farbe bleibt gleich, nur Transparenz nimmt ab
                 float alpha = Mathf.Lerp(initialColor.a, 0f, elapsed / duration);
-                primitive.Color = new Color(initialColor.r + flicker, initialColor.g + flicker, initialColor.b + flicker, alpha);
+                primitive.Color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
 
                 yield return Timing.WaitForOneFrame;
             }
@@ -79,78 +104,72 @@ namespace EarlyGameTweaks.Items
             primitive.Destroy();
         }
 
-        public void SpawnElectricEffect(Vector3 position, int boltCount = 10, float duration = 0.2f)
+        public void SpawnBeam(Vector3 start, Vector3 end)
         {
-            for (int i = 0; i < boltCount; i++)
-            {
-                // Zufällige leichte Versetzung für dynamischere Blitze
-                Vector3 randomOffset = Random.insideUnitSphere * 0.15f;
+            Vector3 direction = end - start;
+            float distance = direction.magnitude;
+            Vector3 midPoint = start + direction * 0.5f;
+            Quaternion rotation = Quaternion.LookRotation(direction);
 
-                // ⚡ Erstelle Blitz (Dünne Linie)
-                Primitive bolt = Primitive.Create(PrimitiveType.Cylinder);
-                bolt.Flags = PrimitiveFlags.Visible;
-                bolt.Color = new Color(0.3f, 0.8f, 1f, 1f); // Hellblauer Blitz
-                bolt.Position = position + randomOffset;
-                bolt.Scale = new Vector3(0.02f, Random.Range(0.3f, 0.6f), 0.02f); // Dünn & lang
+            Primitive beam = Primitive.Create(PrimitiveType.Cylinder);
+            beam.Flags = PrimitiveFlags.Visible;
 
-                // Zufällige Rotation, damit es wie ein echtes Entladen aussieht
-                bolt.Rotation = Quaternion.Euler(Random.Range(-45, 45), Random.Range(0, 360), Random.Range(-45, 45));
+            // Farbe: Blitz-Blau mit Transparenz
+            beam.Color = new Color(10f, 0f, 0f, 0.9f);
 
-                // Animiertes Flackern & Entfernen
-                Timing.RunCoroutine(FadeOutAndDestroy(bolt, duration * Random.Range(0.7f, 1.2f)));
-            }
-        }
-        public void SpawnPrimitivesAlongPath(Vector3 start, Vector3 end)
-        {
-            Vector3 direction = (end - start).normalized;
-            float distance = Vector3.Distance(start, end);
+            // Setze Position, Rotation und Skalierung des Zylinders
+            beam.Position = midPoint;
+            beam.Rotation = rotation * Quaternion.Euler(90f, 0f, 0f); // Zylinder liegt normalerweise entlang Y-Achse, wir rotieren ihn auf Z
+            beam.Scale = new Vector3(0.03f, distance / 2f, 0.03f); // Scale.y = halbe Länge
 
-            for (float i = 0; i <= distance; i += 0.05f)
-            {
-                Vector3 spawnPosition = start + direction * i;
-                Primitive primitive = Primitive.Create(PrimitiveType.Cube);
-                primitive.Flags = PrimitiveFlags.Visible;
-                primitive.Color = new Color(24.1f, 25.7f, 50.0f, 0.1f);
-                primitive.Position = spawnPosition;
-                primitive.Scale *= 0.05f;
-
-                spawnedPrimitives.Enqueue(primitive);
-
-                // Starte Fading & Destroy nach 0.5 Sekunden
-                Timing.RunCoroutine(FadeOutAndDestroy(primitive, 2f));
-            }
-            SpawnSpiralAlongPath(start, end);
+            spawnedPrimitives.Enqueue(beam);
+            Timing.RunCoroutine(FadeOutAndDestroy(beam, 2f));
         }
 
-        public void SpawnSpiralAlongPath(Vector3 start, Vector3 end, int spiralTurns = 10, float radius = 0.1f)
+        private void SpawnSpiralAroundBeam(Vector3 start, Vector3 end, float duration = 2f)
         {
-            Vector3 direction = (end - start).normalized;
-            float distance = Vector3.Distance(start, end);
-            int steps = Mathf.CeilToInt(distance / 0.05f); // Schritte für die Spiralpunkte
+            Vector3 beamDirection = end - start;
+            float beamLength = beamDirection.magnitude;
+            Vector3 beamForward = beamDirection.normalized;
 
-            for (int i = 0; i < steps; i++)
+            int segments = 100; // mehr = glatter
+            float radius = 0.1f;
+            float turns = 4f;
+
+            Quaternion beamRotation = Quaternion.FromToRotation(Vector3.up, beamForward);
+
+            for (int i = 0; i < segments; i++)
             {
-                float t = i / (float)steps; // Fortschritt 0-1 entlang der Linie
-                Vector3 currentPosition = Vector3.Lerp(start, end, t); // Interpolierte Position
+                float t = i / (float)segments;
+                float angle = t * turns * 2f * Mathf.PI;
+                float y = t * beamLength;
 
-                // 🌀 Spiralbewegung berechnen
-                float angle = t * spiralTurns * 360f * Mathf.Deg2Rad; // Spiralwinkel
-                float xOffset = Mathf.Cos(angle) * radius;
-                float yOffset = Mathf.Sin(angle) * radius;
+                float x = Mathf.Cos(angle) * radius;
+                float z = Mathf.Sin(angle) * radius;
 
-                // Spirale um die Schusslinie drehen
-                Quaternion rotation = Quaternion.LookRotation(direction);
-                Vector3 spiralPosition = currentPosition + rotation * new Vector3(xOffset, yOffset, 0);
+                Vector3 localPos = new Vector3(x, y, z);
+                Vector3 worldPos = start + beamRotation * localPos;
 
-                // Erstelle die Spirale mit dünnen Linien
-                Primitive spiralPrimitive = Primitive.Create(PrimitiveType.Cube);
-                spiralPrimitive.Flags = PrimitiveFlags.Visible;
-                spiralPrimitive.Color = new Color(50f, 0f, 0f, 0.1f); // Lila-blauer Plasma-Effekt
-                spiralPrimitive.Position = spiralPosition;
-                spiralPrimitive.Scale = new Vector3(0.025f, 0.025f, 0.025f); // Dünne Linien als Effekt
+                float nextT = (i + 1) / (float)segments;
+                float nextAngle = nextT * turns * 2f * Mathf.PI;
+                float nextY = nextT * beamLength;
+                Vector3 nextLocalPos = new Vector3(Mathf.Cos(nextAngle) * radius, nextY, Mathf.Sin(nextAngle) * radius);
+                Vector3 nextWorldPos = start + beamRotation * nextLocalPos;
 
-                // Starte Fading-Effekt
-                Timing.RunCoroutine(FadeOutAndDestroy(spiralPrimitive, 2f));
+                Vector3 tangent = (nextWorldPos - worldPos).normalized;
+                float segmentLength = Vector3.Distance(nextWorldPos, worldPos);
+
+                Primitive spiralSegment = Primitive.Create(PrimitiveType.Cylinder);
+                spiralSegment.Flags = PrimitiveFlags.Visible;
+                spiralSegment.Color = new Color(0f, 0f, 25f, 0.9f);
+
+                // Scale.y = halbe Länge
+                spiralSegment.Scale = new Vector3(0.06f, segmentLength / 2f, 0.06f);
+                spiralSegment.Position = (worldPos + nextWorldPos) / 2f;
+                spiralSegment.Rotation = Quaternion.LookRotation(tangent) * Quaternion.Euler(90f, 0f, 0f);
+
+                spawnedPrimitives.Enqueue(spiralSegment);
+                Timing.RunCoroutine(FadeOutAndDestroy(spiralSegment, duration));
             }
         }
     }

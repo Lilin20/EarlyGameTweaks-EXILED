@@ -90,6 +90,7 @@ namespace EarlyGameTweaks.Items
             if (ev.Target == null) return;
 
             ev.CanHurt = false;
+            ev.Player.ShowHitMarker();
 
             if (ev.Target.Role.Team != PlayerRoles.Team.SCPs)
             {

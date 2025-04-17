@@ -60,7 +60,7 @@ namespace EarlyGameTweaks.Items
         protected override void SubscribeEvents()
         {
             Player.UsingItemCompleted += OnUsingInjection;
-            Player.Hurt += OnHittingDummy;
+            //Player.Hurt += OnHittingDummy;
 
             base.SubscribeEvents();
         }
@@ -68,7 +68,7 @@ namespace EarlyGameTweaks.Items
         protected override void UnsubscribeEvents()
         {
             Player.UsingItemCompleted -= OnUsingInjection;
-            Player.Hurt -= OnHittingDummy;
+            //Player.Hurt -= OnHittingDummy;
 
             base.UnsubscribeEvents();
         }

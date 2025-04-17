@@ -51,6 +51,7 @@ namespace EarlyGameTweaks.Abilities.Active
             {
                 if (player.Role.Side == ply.Role.Side && player != ply)
                     coroutines.Add(Timing.RunCoroutine(DoMist(ply, player)));
+
             }
         }
 

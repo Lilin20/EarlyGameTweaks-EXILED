@@ -20,6 +20,7 @@ namespace EarlyGameTweaks.Items
         private static Dictionary<int, Light> _playerLights = new Dictionary<int, Light>();
         public override SpawnProperties SpawnProperties { get; set; }
 
+
         protected override void SubscribeEvents()
         {
             base.SubscribeEvents();

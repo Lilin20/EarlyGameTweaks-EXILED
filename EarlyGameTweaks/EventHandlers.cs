@@ -16,20 +16,13 @@ using Exiled.API.Features.Doors;
 using Exiled.Events.EventArgs.Scp939;
 using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Scp1344;
-using UnityEngine.AI;
 using MEC;
-using static PlayerList;
-using PlayerStatsSystem;
-using Exiled.API.Features.DamageHandlers;
-using MapGeneration;
 
 namespace EarlyGameTweaks
 {
     public class EventHandlers
     {
         public static List<GameObject> BlacklistedObjects = new();
-        private readonly EarlyGameTweaks Plugin;
-        private readonly Config _config;
         public CoroutineHandle pathFinderCoroutine = new CoroutineHandle();
 
         public void OnShot(ShotEventArgs ev)
@@ -90,6 +83,11 @@ namespace EarlyGameTweaks
             //navMeshCoroutine = Timing.RunCoroutine(OptimizeNavMeshCoroutine());
         }
 
+        public void OnVerifiedHintSetup(VerifiedEventArgs ev)
+        {
+            
+        }
+
         public void OnRoundStartSendHint()
         {
             Room roomPeanut = Room.Get(RoomType.Lcz173);
@@ -147,6 +145,49 @@ namespace EarlyGameTweaks
             }
         }
 
+        public void OnSCPVoid(HurtingEventArgs ev)
+        {
+            if (ev.Player == null) return;
+
+            if (ev.Player.Role.Team == Team.SCPs)
+            {
+                if (ev.DamageHandler.Type == DamageType.Crushed)
+                {
+                    List<RoomType> forbiddenRoomTypes = new List<RoomType>
+                    {
+                        RoomType.HczHid,
+                        RoomType.HczTestRoom,
+                        RoomType.EzCollapsedTunnel,
+                        RoomType.EzGateA,
+                        RoomType.EzGateB,
+                        RoomType.Lcz173,
+                        RoomType.HczTesla,
+                        RoomType.EzShelter,
+                        RoomType.Pocket,
+                        RoomType.HczCrossRoomWater,
+                    };
+
+                    Room[] allRooms = Room.List
+                        .Where(r => !forbiddenRoomTypes.Contains(r.Type) && r.Zone == ZoneType.HeavyContainment)
+                        .ToArray();
+
+                    Room randomRoom = allRooms[UnityEngine.Random.Range(0, allRooms.Length)];
+                    while (forbiddenRoomTypes.Contains(randomRoom.Type) || randomRoom.Zone != ZoneType.HeavyContainment)
+                    {
+                        randomRoom = allRooms[UnityEngine.Random.Range(0, allRooms.Length)];
+                    }
+
+                    ev.IsAllowed = false;
+                    ev.Player.Teleport(randomRoom);
+                    ev.Player.IsGodModeEnabled = true;
+                    Timing.CallDelayed(1f, () =>
+                    {
+                        ev.Player.IsGodModeEnabled = false;
+                    });
+                }
+            }
+        }
+        
         public void OnPickupArmor(PickingUpItemEventArgs ev)
         {
             if (ev.Pickup.Category == ItemCategory.Armor)
@@ -277,5 +318,9 @@ namespace EarlyGameTweaks
             }
         }
 
+        public static float GetLeftXPosition(float _aspectRatio)
+        {
+            return (622.27444f * Mathf.Pow(_aspectRatio, 3f)) + (-2869.08991f * Mathf.Pow(_aspectRatio, 2f)) + (3827.03102f * _aspectRatio) - 1580.21554f;
+        }
     }
 }

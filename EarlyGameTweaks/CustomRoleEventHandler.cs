@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using EarlyGameTweaks.API;
 using Exiled.API.Enums;
 using Exiled.API.Features;
@@ -14,7 +15,6 @@ namespace EarlyGameTweaks
     {
         private readonly EarlyGameTweaks Plugin;
         public CustomRoleEventHandler(EarlyGameTweaks plugin) => Plugin = plugin;
-
         public void OnRoundStarted()
         {
             List<ICustomRole>.Enumerator dClassRoles = new();
