@@ -4,6 +4,7 @@ using EarlyGameTweaks.API;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Spawn;
+using Exiled.CustomRoles.API;
 using Exiled.CustomRoles.API.Features;
 using PlayerRoles;
 using UnityEngine;
@@ -54,18 +55,13 @@ namespace EarlyGameTweaks.Roles.ChaosInsurgency
                 RestrictUsingItems = false,
                 RestrictPickingUpItems = true,
                 RestrictDroppingItems = false,
-            },
-
-            new EffectEnabler()
-            {
-                Name = "Adleraugen [Passive]",
-                Description = "Du kannst weiter sehen als andere Spieler.",
-                EffectsToApply =
-                {
-                    {EffectType.FogControl, 255}
-                }
             }
         };
+
+        protected override void RoleAdded(Player player)
+        {
+            base.RoleAdded(player);
+        }
 
         public override List<string> Inventory { get; set; } = new()
         {

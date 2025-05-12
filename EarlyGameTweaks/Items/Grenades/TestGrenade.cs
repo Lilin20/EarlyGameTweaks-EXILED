@@ -17,7 +17,7 @@ namespace EarlyGameTweaks.Items
     {
         public override bool ExplodeOnCollision { get; set; } = true;
         public override float FuseTime { get; set; } = 5f;
-        public override uint Id { get; set; } = 203;
+        public override uint Id { get; set; } = 8888;
         public override string Name { get; set; } = "Test Granate";
         public override string Description { get; set; } = "Experimentelles Doohickey";
         public override float Weight { get; set; } = 1.75f;

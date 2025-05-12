@@ -17,6 +17,8 @@ using Exiled.Events.EventArgs.Scp939;
 using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Scp1344;
 using MEC;
+using PlayerRoles.PlayableScps.Scp3114;
+using Exiled.Events.EventArgs.Scp3114;
 
 namespace EarlyGameTweaks
 {
@@ -59,10 +61,79 @@ namespace EarlyGameTweaks
             }
         }
 
+        public void ProcessFiring(ShootingEventArgs ev)
+        {
+            FakeFiringExtensions.FakeFireAutomatic(ev.Firearm.Base);
+        }
+
+        public void OnSpawnSkelly(SpawnedEventArgs ev)
+        {
+            if (ev.Player.Role is Exiled.API.Features.Roles.Scp3114Role _scp3114)
+            {
+                Door hczArmory = Door.Get(DoorType.HczArmory);
+                hczArmory.IsOpen = true;
+                ev.Player.Teleport(hczArmory);
+                Ragdoll.CreateAndSpawn(
+                    RoleTypeId.FacilityGuard,
+                    "[Redacted]",
+                    "Strangled to death.",
+                    ev.Player.Position,
+                    ev.Player.Rotation);
+            }
+            Timing.CallDelayed(0.5f, () =>
+            {
+                if (ev.Player.Role is Exiled.API.Features.Roles.Scp3114Role scp3114)
+                {
+                    Vector3 ragdolPos = new Vector3(39, 1014, -31);
+                    Ragdoll ragdoll = Ragdoll.CreateAndSpawn(
+                        RoleTypeId.ClassD,
+                        ev.Player.DisplayNickname,
+                        "idk just died somehow",
+                        ragdolPos,
+                        default,
+                        null);
+                    scp3114.IdentityRagdoll = ragdoll;
+                    scp3114.StolenRole = RoleTypeId.ClassD;
+                    scp3114.DisguiseStatus = Scp3114Identity.DisguiseStatus.Active;
+                }
+            });
+        }
+
+        public void OnReveal(RevealedEventArgs ev)
+        {
+            float maxDistance = 5f;
+
+            List<Exiled.API.Features.Player> nearbyPlayers = new List<Exiled.API.Features.Player>();
+
+            foreach (Exiled.API.Features.Player player in Exiled.API.Features.Player.List)
+            {
+                if (player == ev.Player)
+                    continue;
+
+                float distance = Vector3.Distance(ev.Player.Position, player.Position);
+                if (distance <= maxDistance)
+                {
+                    nearbyPlayers.Add(player);
+                }
+            }
+
+            foreach (Exiled.API.Features.Player player in nearbyPlayers)
+            {
+                player.EnableEffect(EffectType.MovementBoost, 20, 4, false);
+                player.EnableEffect(EffectType.AmnesiaItems, 1, 4, false);
+                player.EnableEffect(EffectType.Invigorated, 1, 4, false);
+                float random = UnityEngine.Random.value;
+                if (random <= 0.1f)
+                {
+                    player.EnableEffect(EffectType.CardiacArrest, 1, 0.1f, false);
+                }
+            }
+        }
+
         public void OnVerify(VerifiedEventArgs ev)
         {
-            ServerSpecificSettingsSync.DefinedSettings = SettingHandlers.LilinsAIOMenu();
-            ServerSpecificSettingsSync.SendToPlayer(ev.Player.ReferenceHub);
+            //ServerSpecificSettingsSync.DefinedSettings = SettingHandlers.LilinsAIOMenu();
+            //ServerSpecificSettingsSync.SendToPlayer(ev.Player.ReferenceHub);
         }
 
         public void OnRageStart(AddingTargetEventArgs ev)
@@ -96,6 +167,11 @@ namespace EarlyGameTweaks
             Door door = Door.Get(DoorType.Scp173Gate);
             door.DoorLockType = DoorLockType.Isolation;
             door.AllowsScp106 = false;
+
+            Door door173 = Door.Get(DoorType.Scp173Connector);
+            door173.KeycardPermissions = KeycardPermissions.ContainmentLevelThree;
+            Room room173 = Room.Get(RoomType.Lcz173);
+            room173.Blackout(-1, DoorLockType.None);
 
             Room[] allRooms = Room.List.ToArray();
             List<RoomType> forbiddenRoomTypes = new List<RoomType>

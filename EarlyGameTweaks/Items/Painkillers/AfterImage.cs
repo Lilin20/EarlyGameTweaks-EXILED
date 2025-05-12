@@ -9,7 +9,6 @@ using Exiled.API.Features.Spawn;
 using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Permissions.Features;
-using MapEditorReborn.Commands.ModifyingCommands.Rotation;
 using MEC;
 using PlayerRoles.FirstPersonControl;
 using UnityEngine;
@@ -24,34 +23,7 @@ namespace EarlyGameTweaks.Items
         public override string Name { get; set; } = "Mimic Tabletten";
         public override string Description { get; set; } = "Erzeugt Trugbilder von dir in einem Kreis.";
         public override float Weight { get; set; } = 0.5f;
-        public override SpawnProperties SpawnProperties { get; set; } = new()
-        {
-            Limit = 3,
-            LockerSpawnPoints = new List<LockerSpawnPoint>
-            {
-                new()
-                {
-                    Chance = 45,
-                    Zone = ZoneType.LightContainment,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                },
-                new()
-                {
-                    Chance = 45,
-                    Zone = ZoneType.HeavyContainment,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                },
-                new()
-                {
-                    Chance = 45,
-                    Zone = ZoneType.Entrance,
-                    UseChamber = false,
-                    Type = LockerType.Misc,
-                }
-            }
-        };
+        public override SpawnProperties SpawnProperties { get; set; }
 
 
         public bool DidPlayerEscape = false;

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Exiled.API.Enums;
 using Exiled.API.Features;
 using Exiled.API.Features.Items;
-using MapEditorReborn.API.Features;
 using MEC;
 using Respawning.Waves;
 using UnityEngine;
@@ -123,21 +122,21 @@ namespace EarlyGameTweaks.Abilities
 
             Respawn.PlayEffect(Respawn.TryGetWaveBase(SpawnableFaction.NtfWave, out var wave) ? wave : new NtfSpawnWave());
 
-            Timing.CallDelayed(18f, () =>
-            {
-                var schematic = ObjectSpawner.SpawnSchematic(schematicName: "HumeCrate", position: new Vector3(126.5183f, 995.46f, -43.0551f), Quaternion.Euler(0, 0, 0), new Vector3(1, 1, 1), null);
-                Timing.CallDelayed(40f, () =>
-                {
-                    schematic.Destroy();
-                });
-            });
+            //Timing.CallDelayed(18f, () =>
+            //{
+            //    var schematic = ObjectSpawner.SpawnSchematic(schematicName: "HumeCrate", position: new Vector3(126.5183f, 995.46f, -43.0551f), Quaternion.Euler(0, 0, 0), new Vector3(1, 1, 1), null);
+            //    Timing.CallDelayed(40f, () =>
+            //    {
+            //        schematic.Destroy();
+            //    });
+            //});
 
             Timing.CallDelayed(20f, () =>
             {
                 light.Destroy();
             });
         }
-        public void DropToPlayer(Player player)
+        public void DropToPlayer()
         {
             Light light = Light.Create(Vector3.zero, Vector3.zero, Vector3.one, true, new Color(0f, 0.8f, 0));
             light.Intensity = 50;
@@ -145,7 +144,7 @@ namespace EarlyGameTweaks.Abilities
             light.ShadowStrength = 0;
             light.ShadowType = LightShadows.None;
 
-            light.Position = new Vector3(126.5183f, 995.4606f, -43.0551f);
+            light.Position = new Vector3(131.319f, 296f, -43.092f);
 
 
 
@@ -157,7 +156,7 @@ namespace EarlyGameTweaks.Abilities
             {
                 foreach (ItemType item in itemsToDrop)
                 {
-                    var itemObj = Item.Create(item).CreatePickup(ItemOffset(new Vector3(126.5183f, 995.4606f, -43.0551f)));
+                    var itemObj = Item.Create(item).CreatePickup(ItemOffset(new Vector3(131.319f, 296f, -43.092f)));
                 }
             });
             Timing.CallDelayed(20f, () =>

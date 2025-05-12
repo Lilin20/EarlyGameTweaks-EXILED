@@ -9,10 +9,6 @@ using Exiled.Events.EventArgs.Player;
 using UnityEngine;
 using Player = Exiled.Events.Handlers.Player;
 using Light = Exiled.API.Features.Toys.Light;
-using MapEditorReborn;
-using MapEditorReborn.Events.Handlers;
-using MapEditorReborn.API.Features.Serializable;
-using MapEditorReborn.API.Features;
 
 namespace EarlyGameTweaks.Items
 {

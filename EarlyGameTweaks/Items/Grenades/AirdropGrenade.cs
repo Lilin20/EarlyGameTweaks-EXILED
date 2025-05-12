@@ -1,26 +1,23 @@
 ﻿using System.Collections.Generic;
-using AdminToys;
 using EarlyGameTweaks.Abilities;
 using Exiled.API.Enums;
+using Exiled.API.Features;
 using Exiled.API.Features.Attributes;
 using Exiled.API.Features.Spawn;
-using Exiled.API.Features.Toys;
 using Exiled.CustomItems.API.Features;
 using Exiled.Events.EventArgs.Map;
 using MEC;
-using UnityEngine;
-using Light = Exiled.API.Features.Toys.Light;
 
 namespace EarlyGameTweaks.Items
 {
     [CustomItem(ItemType.GrenadeFlash)]
-    public class TestDummy : CustomGrenade
+    public class AirdropGrenade : CustomGrenade
     {
         public override bool ExplodeOnCollision { get; set; } = false;
-        public override float FuseTime { get; set; } = 10f;
-        public override uint Id { get; set; } = 203;
-        public override string Name { get; set; } = "TG 5 - Signalgranate";
-        public override string Description { get; set; } = "Ein Signalerzeuger. Fordert aus Site-[REDACTED] einen Hume Breaker an.";
+        public override float FuseTime { get; set; } = 5f;
+        public override uint Id { get; set; } = 204;
+        public override string Name { get; set; } = "AS - Signalgranate";
+        public override string Description { get; set; } = "Ein Signalerzeuger. Fordert Nachschub von Site-[REDACTED] an.";
         public override float Weight { get; set; } = 1.75f;
         public AirdropManager am = new AirdropManager();
         public override SpawnProperties SpawnProperties { get; set; } = new()
@@ -30,8 +27,18 @@ namespace EarlyGameTweaks.Items
             {
                 new()
                 {
-                    Chance = 100,
-                    Location = SpawnLocationType.Inside173Gate,
+                    Chance = 50,
+                    Location = SpawnLocationType.InsideSurfaceNuke,
+                },
+                new()
+                {
+                    Chance = 50,
+                    Location = SpawnLocationType.InsideIntercom,
+                },
+                new()
+                {
+                    Chance = 50,
+                    Location = SpawnLocationType.Inside173Armory,
                 }
             },
         };
@@ -53,10 +60,11 @@ namespace EarlyGameTweaks.Items
 
             if (zone == ZoneType.Surface)
             {
-                ev.Player.ShowHint("Der Hume Breaker wird in kürze geliefert! Das kann einen Moment dauern...");
-                Timing.CallDelayed(30, () =>
+                Map.Broadcast(message: "FREQUENCY: [REDACTED] - Airdrop inbound.", duration: 10);
+
+                Timing.CallDelayed(15, () =>
                 {
-                    am.HumeDrop();
+                    am.DropToPlayer();
                 });
             }
             else

@@ -26,18 +26,7 @@ namespace EarlyGameTweaks.Items
         public override float Weight { get; set; } = 0.1f;
         public Transform handBone;
         private Queue<Primitive> spawnedPrimitives = new Queue<Primitive>();
-        public override SpawnProperties SpawnProperties { get; set; } = new()
-        {
-            Limit = 1,
-            DynamicSpawnPoints = new List<DynamicSpawnPoint>
-            {
-                new()
-                {
-                    Chance = 25,
-                    Location = SpawnLocationType.Inside049Armory,
-                }
-            },
-        };
+        public override SpawnProperties SpawnProperties { get; set; }
 
         protected override void SubscribeEvents()
         {

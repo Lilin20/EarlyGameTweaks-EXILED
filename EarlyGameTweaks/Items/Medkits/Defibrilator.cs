@@ -38,11 +38,6 @@ namespace EarlyGameTweaks.Items
                 new()
                 {
                     Chance = 50,
-                    Location = SpawnLocationType.InsideNukeArmory,
-                },
-                new()
-                {
-                    Chance = 50,
                     Location = SpawnLocationType.InsideLczCafe,
                 },
             },

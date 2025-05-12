@@ -34,7 +34,6 @@ namespace EarlyGameTweaks
         public LuckyMan lm = new LuckyMan();
         public Sniper sc = new Sniper();
         public Berserker berserkerc = new Berserker();
-        public SpecialAgentGuard sagc = new SpecialAgentGuard();
         public ZombieJuggernaut zjc = new ZombieJuggernaut();
         public MedicZombie zmc = new MedicZombie();
         public Thief thiefc = new Thief();
@@ -80,7 +79,6 @@ namespace EarlyGameTweaks
             lm.Register();
             sc.Register();
             berserkerc.Register();
-            sagc.Register();
             zjc.Register();
             zmc.Register();
             thiefc.Register();
@@ -121,9 +119,14 @@ namespace EarlyGameTweaks
             Exiled.Events.Handlers.Server.RespawningTeam += CustomRoleEventHandler.OnRespawningTeam;
             Exiled.Events.Handlers.Map.Generated += EventHandlers.OnMapGeneration;
             Exiled.Events.Handlers.Scp049.FinishingRecall += CustomRoleEventHandler.FinishingRecall;
+            Exiled.Events.Handlers.Scp3114.Revealed += EventHandlers.OnReveal;
+            Exiled.Events.Handlers.Player.Spawned += EventHandlers.OnSpawnSkelly;
+            //Exiled.Events.Handlers.Player.Shooting += EventHandlers.ProcessFiring;
             //Exiled.Events.Handlers.Server.RoundStarted += EventHandlers.OnRoundStartHintSetup;
 
             CustomAbility.RegisterAbilities();
+
+            harmony.PatchAll();
 
             base.OnEnabled();
         }
@@ -151,7 +154,6 @@ namespace EarlyGameTweaks
             lm.Unregister();
             sc.Unregister();
             berserkerc.Unregister();
-            sagc.Unregister();
             zjc.Unregister();
             zmc.Unregister();
             thiefc.Unregister();
@@ -165,8 +167,12 @@ namespace EarlyGameTweaks
             Exiled.Events.Handlers.Server.RespawningTeam -= CustomRoleEventHandler.OnRespawningTeam;
             Exiled.Events.Handlers.Map.Generated -= EventHandlers.OnMapGeneration;
             Exiled.Events.Handlers.Scp049.FinishingRecall -= CustomRoleEventHandler.FinishingRecall;
+            Exiled.Events.Handlers.Scp3114.Revealed -= EventHandlers.OnReveal;
+            Exiled.Events.Handlers.Player.Spawned -= EventHandlers.OnSpawnSkelly;
+            //Exiled.Events.Handlers.Player.Shooting -= EventHandlers.ProcessFiring;
             //Exiled.Events.Handlers.Server.RoundStarted -= EventHandlers.OnRoundStartHintSetup;
 
+            harmony.UnpatchAll();
             EventHandlers = null;
             Instance = null;
             base.OnDisabled();

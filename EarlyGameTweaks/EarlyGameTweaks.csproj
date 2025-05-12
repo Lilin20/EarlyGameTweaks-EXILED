@@ -65,9 +65,6 @@
     <Reference Include="HintServiceMeow-Exiled">
       <HintPath>..\..\..\Downloads\HintServiceMeow-Exiled.dll</HintPath>
     </Reference>
-    <Reference Include="MapEditorReborn">
-      <HintPath>..\..\..\Downloads\MapEditorReborn.dll</HintPath>
-    </Reference>
     <Reference Include="NVorbis">
       <HintPath>..\..\Games\NVorbis.dll</HintPath>
     </Reference>
@@ -142,8 +139,10 @@
     <Compile Include="API\StartTeam.cs" />
     <Compile Include="CustomRoleEventHandler.cs" />
     <Compile Include="CustomRoleMethods.cs" />
-    <Compile Include="Items\Adrenaline\TestAdrenaline.cs" />
+    <Compile Include="FakeFiringExtensions.cs" />
+    <Compile Include="Items\Armors\AntiGravity.cs" />
     <Compile Include="Items\Grenades\SmokeGrenade.cs" />
+    <Compile Include="Items\Grenades\AirdropGrenade.cs" />
     <Compile Include="Items\Grenades\TestDummy.cs" />
     <Compile Include="Items\Grenades\TestGrenade.cs" />
     <Compile Include="Items\Medkits\DefiNtf.cs" />
@@ -161,6 +160,7 @@
     <Compile Include="Items\Pistols\GrenadeLauncher.cs" />
     <Compile Include="Items\Pistols\TestDummyPistol.cs" />
     <Compile Include="Items\Rifles\Sniper.cs" />
+    <Compile Include="Items\SCPs\SCP714.cs" />
     <Compile Include="Items\SCPs\ScrambleGoggles.cs" />
     <Compile Include="Items\SCPs\GogglesItem.cs" />
     <Compile Include="Items\SCPs\Gasmask.cs" />
@@ -199,7 +199,6 @@
     <Compile Include="Roles\NTF\Sniper.cs" />
     <Compile Include="Roles\NTF\NtfMedic.cs" />
     <Compile Include="Roles\NTF\DeltaAgent.cs" />
-    <Compile Include="Roles\NTF\SpecialAgentGuard.cs" />
     <Compile Include="Roles\Scientist\Pacifist.cs" />
     <Compile Include="Roles\SCP\DwarfZombie.cs" />
     <Compile Include="Roles\SCP\MedicZombie.cs" />
@@ -209,7 +208,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ExMod.Exiled">
-      <Version>9.4.0</Version>
+      <Version>9.6.0-beta8</Version>
     </PackageReference>
     <PackageReference Include="RueI">
       <Version>2.0.5</Version>

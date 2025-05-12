@@ -7,6 +7,7 @@ using EarlyGameTweaks.Abilities.Active;
 using EarlyGameTweaks.Abilities.Passive;
 using EarlyGameTweaks.API;
 using Exiled.API.Enums;
+using Exiled.API.Features;
 using Exiled.API.Features.Spawn;
 using Exiled.CustomRoles.API.Features;
 using PlayerRoles;
@@ -37,5 +38,12 @@ namespace EarlyGameTweaks.Roles.SCP
         {
             Limit = 1,
         };
+
+        protected override void RoleAdded(Player player)
+        {
+            var test = ActiveAbility.AllActiveAbilities.TryGetValue(player, out var abilities);
+            abilities.FirstOrDefault(abilities => abilities.GetType() == typeof(HealingMist));
+            base.RoleAdded(player);
+        }
     }
 }

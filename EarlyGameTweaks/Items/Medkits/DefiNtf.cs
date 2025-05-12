@@ -65,7 +65,7 @@ namespace EarlyGameTweaks.Items
 
                 if (aPlayer.Role == RoleTypeId.Spectator)
                 {
-                    aPlayer.Role.Set(exRagdoll.Role, RoleSpawnFlags.None);
+                    aPlayer.Role.Set(RoleTypeId.NtfPrivate, RoleSpawnFlags.None);
                     aPlayer.Teleport(exRagdoll.Position + Vector3.up);
                     exRagdoll.Destroy();
                 }
